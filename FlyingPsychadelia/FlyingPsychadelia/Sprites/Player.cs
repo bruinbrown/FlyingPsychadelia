@@ -23,7 +23,7 @@ namespace FlyingPsychadelia
         }
         public void DetectMovement()
         {
-            int MoveMagnitude = 1;
+            int MoveMagnitude = 5;
             if (_controller.DetectRight())
             {
                 AddVeocity(new Vector2(MoveMagnitude, 0));
@@ -32,19 +32,19 @@ namespace FlyingPsychadelia
             {
                 AddVeocity(new Vector2(-MoveMagnitude, 0));
             }
-            if (_controller.DetectUp())
-            {
-                if (Velocity.Y == 1)
-                    JumpSound();
-                AddVeocity(new Vector2(0, -MoveMagnitude * 2));
-            }
+            //if (_controller.DetectUp())
+            //{
+            //    if (Velocity.Y == 1)
+            //        JumpSound();
+            //    AddVeocity(new Vector2(0, -MoveMagnitude * 2));
+            //}
             else if (_controller.DetectDown())
             {
                 AddVeocity(new Vector2(0, MoveMagnitude));
             }
             if (_controller.DetectJump())
             {
-                AddVeocity(new Vector2(0, -20));
+                AddVeocity(new Vector2(0, -10));
             }
         }
         public Player(ContentManager content, IController Controller)

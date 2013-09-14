@@ -18,6 +18,7 @@ namespace FlyingPsychadelia.Screens
     public class GameplayScreen : GameScreen
     {
         private ContentManager _content;
+        private IList<BaseEnemy> _enemies = new List<BaseEnemy>();
         private SpriteFont _gameFont;
 
         private Vector2 _playerPosition = new Vector2(100, 100);
@@ -27,8 +28,7 @@ namespace FlyingPsychadelia.Screens
 
         private float _pauseAlpha;
         private Map _map;
-        private Player _player;
-        private Player _player2;
+
         private World _world;
         private List<Player> Players = new List<Player>();
 
@@ -63,6 +63,19 @@ namespace FlyingPsychadelia.Screens
             for (int i = 0; i < Players.Count; i++)
             {
                 Players[i].SetLocation(i * 50, 0);
+            }
+            var Random = new System.Random();
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    var x = Random.Next(_map.Width* _map.TileWidth);
+            //    var y = Random.Next(_map.Height * _map.TileHeight);
+            //    _enemies.Add(new StaticEnemy(_content,x,y));
+            //}
+            for (int i = 0; i < 10; i++)
+            {
+                var x = Random.Next(_map.Width * _map.TileWidth);
+                var y = Random.Next(_map.Height* _map.TileHeight);
+                _enemies.Add(new OscillatingEnemy(_content, x, y));
             }
             _world = new World(Players.ToArray(), _map.ObjectLayers[0].MapObjects);
 
@@ -110,13 +123,16 @@ namespace FlyingPsychadelia.Screens
                     // Reset velocity for this frame
                     player.Velocity = new Vector2(0, 0);
                     // Add gravity
-                    player.AddVeocity(new Vector2(0, 1));
+                    player.AddVeocity(new Vector2(0, 3));
                     // Add Directional Velocity
                     player.DetectMovement();
                     // Move player based on cumulative velocity
                     player.Update(1);  // 1 doesnothing. Fix this for varying framerates.
                 }
-
+                foreach (BaseEnemy enemy in _enemies)
+                {
+                    enemy.Update(1);
+                }
                 // Resolve Collisions 
                 _world.ResolveCollisions();
             }
@@ -196,6 +212,10 @@ namespace FlyingPsychadelia.Screens
             foreach (Player player in Players)
             {
                 player.Draw(spriteBatch);
+            }
+            foreach (BaseEnemy enemy in _enemies)
+            {
+                enemy.Draw(spriteBatch);
             }
 
             spriteBatch.End();

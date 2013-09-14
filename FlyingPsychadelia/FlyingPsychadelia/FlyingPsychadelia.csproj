@@ -38,13 +38,15 @@
     <Compile Include="Game1.cs" />
     <Compile Include="ICollidable.cs" />
     <Compile Include="IController.cs" />
-    <Compile Include="BaseEnemy.cs" />
+    <Compile Include="Sprites\BaseEnemy.cs" />
+    <Compile Include="Sprites\OscillatingEnemy.cs" />
     <Compile Include="Player1KeyboardController.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="Sprites\Player.cs" />
     <Compile Include="Player2KeyboardController.cs" />
-    <Compile Include="MovableSprite.cs" />
+    <Compile Include="Sprites\MovableSprite.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sprites\RandomMovingEnemy.cs" />
     <Compile Include="Screens\BackgroundScreen.cs" />
     <Compile Include="Screens\Events\PlayerIndexEventArgs.cs" />
     <Compile Include="Screens\GameplayScreen.cs" />
@@ -55,6 +57,7 @@
     <Compile Include="Screens\MessageBoxScreen.cs" />
     <Compile Include="Screens\OptionsMenuScreen.cs" />
     <Compile Include="Screens\PauseMenuScreen.cs" />
+    <Compile Include="Sprites\StaticEnemy.cs" />
     <Compile Include="StateManager\GameStateManagement.cs" />
     <Compile Include="StateManager\InputState.cs" />
     <Compile Include="StateManager\ScreenManager.cs" />
