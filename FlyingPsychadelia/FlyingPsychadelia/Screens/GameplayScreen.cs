@@ -18,7 +18,6 @@ namespace FlyingPsychadelia.Screens
     public class GameplayScreen : GameScreen
     {
         private ContentManager _content;
-        private IList<BaseEnemy> _enemies = new List<BaseEnemy>();
         private SpriteFont _gameFont;
 
         private Random _random = new Random();
@@ -27,7 +26,6 @@ namespace FlyingPsychadelia.Screens
         private Map _map;
 
         private World _world;
-        private List<Player> Players = new List<Player>();
         private ProgressionShader _progressionShader;
 
         #region Initialization
@@ -56,12 +54,14 @@ namespace FlyingPsychadelia.Screens
             _gameFont = _content.Load<SpriteFont>("gamefont");
 
             _map = _content.Load<Map>("map2");
+            List<Player> Players = new List<Player>();
             Players.Add(new Player(_content, new Player1KeyboardController()));
             Players.Add(new Player(_content, new Player2KeyboardController()));
             for (int i = 0; i < Players.Count; i++)
             {
                 Players[i].SetLocation(i * 50, 0);
             }
+            List<BaseEnemy> _enemies = new List<BaseEnemy>();
             var Random = new System.Random();
             //for (int i = 0; i < 10; i++)
             //{
@@ -81,7 +81,7 @@ namespace FlyingPsychadelia.Screens
                 var y = Random.Next(_map.Height * _map.TileHeight);
                 _enemies.Add(new VerticallyOscillatingEnemy(_content, x, y, 150));
             } 
-            _world = new World(Players.ToArray(), _map);
+            _world = new World(_map, Players, _enemies);
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
             // timing mechanism that we have just finished a very long frame, and that
@@ -124,21 +124,6 @@ namespace FlyingPsychadelia.Screens
 
             if (IsActive)
             {
-                foreach (Player player in Players)
-                {
-                    player.Velocity = Vector2.Zero;
-                    // Add gravity
-                    player.AddVeocity(new Vector2(player.Velocity.X*-0.2f, 1));
-                    // Add Directional Velocity
-                    player.DetectMovement();
-                    // Move player based on cumulative velocity
-                    player.Update(1);  // 1 doesnothing. Fix this for varying framerates.
-                }
-                foreach (BaseEnemy enemy in _enemies)
-                {
-                    enemy.Update(1);
-                }
-                // Resolve Collisions 
                 _world.Update();
             }
         }
@@ -197,14 +182,7 @@ namespace FlyingPsychadelia.Screens
 
             Rectangle Camera = new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height);
             _map.Draw(spriteBatch, Camera);
-            foreach (Player player in Players)
-            {
-                player.Draw(spriteBatch);
-            }
-            foreach (BaseEnemy enemy in _enemies)
-            {
-                enemy.Draw(spriteBatch);
-            }
+            _world.Draw(spriteBatch);
 
             spriteBatch.End();
 
