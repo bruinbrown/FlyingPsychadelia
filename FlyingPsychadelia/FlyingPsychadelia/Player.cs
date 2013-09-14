@@ -12,6 +12,7 @@ namespace FlyingPsychadelia
     {
         private Rectangle _Rectangle;
         private Texture2D _Texture;
+        public Vector2 Velocity;
         public void MoveLeft()
         {
             _Rectangle.X  -= 10;
@@ -37,6 +38,15 @@ namespace FlyingPsychadelia
         public void MoveRight()
         {
             _Rectangle.X += 10;
+        }
+        public bool MovingUp()
+        {
+            return Velocity.Y < 0;
+        }
+        public bool MovingRight()
+        {
+            return Velocity.X > 0;
+            
         }
     }
 }
