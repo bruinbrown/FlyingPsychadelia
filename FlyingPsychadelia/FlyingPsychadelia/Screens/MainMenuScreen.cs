@@ -1,5 +1,6 @@
-﻿using FlyingPsychadelia.Screens.Events;
-using FlyingPsychadelia.StateManager;
+﻿using System;
+using FlyingPsychadelia.Screens.Controls;
+using FlyingPsychadelia.Screens.Events;
 using Microsoft.Xna.Framework;
 
 namespace FlyingPsychadelia.Screens
@@ -14,12 +15,14 @@ namespace FlyingPsychadelia.Screens
         /// <summary>
         /// Constructor fills in the menu contents.
         /// </summary>
-        public MainMenuScreen() : base("Main Menu")
+        public MainMenuScreen()
         {
+            MainMenuEntries.Add(new MainMenuEntry("Flying Psychadelia", true));
+
             // Create our menu entries.
-            var playGameMenuEntry = new MenuEntry("Play Game");
-            var optionsMenuEntry = new MenuEntry("Options");
-            var exitMenuEntry = new MenuEntry("Exit");
+            var playGameMenuEntry = new MenuEntry("Play Game", true);
+            var optionsMenuEntry = new MenuEntry("Options", true);
+            var exitMenuEntry = new MenuEntry("Exit", true);
 
             // Hook up menu event handlers.
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
@@ -40,7 +43,7 @@ namespace FlyingPsychadelia.Screens
         /// <summary>
         /// Event handler for when the Play Game menu entry is selected.
         /// </summary>
-        void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        private void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GameplayScreen());
         }
@@ -49,11 +52,10 @@ namespace FlyingPsychadelia.Screens
         /// <summary>
         /// Event handler for when the Options menu entry is selected.
         /// </summary>
-        void OptionsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        private void OptionsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             ScreenManager.AddScreen(new OptionsMenuScreen(), e.PlayerIndex);
         }
-
 
         /// <summary>
         /// When the user cancels the main menu, ask if they want to exit the sample.
@@ -62,13 +64,12 @@ namespace FlyingPsychadelia.Screens
         {
             const string message = "Are you sure you want to exit this sample?";
 
-            MessageBoxScreen confirmExitMessageBox = new MessageBoxScreen(message);
+            var confirmExitMessageBox = new MessageBoxScreen(message);
 
             confirmExitMessageBox.Accepted += ConfirmExitMessageBoxAccepted;
 
             ScreenManager.AddScreen(confirmExitMessageBox, playerIndex);
         }
-
 
         /// <summary>
         /// Event handler for when the user selects ok on the "are you sure

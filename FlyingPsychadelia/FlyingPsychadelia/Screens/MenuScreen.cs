@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FlyingPsychadelia.Screens.Controls;
 using FlyingPsychadelia.Screens.Events;
 using FlyingPsychadelia.StateManager;
 using Microsoft.Xna.Framework;
@@ -13,9 +14,9 @@ namespace FlyingPsychadelia.Screens
     /// </summary>
     public abstract class MenuScreen : GameScreen
     {
+        private readonly List<MainMenuEntry> _mainMenuEntries = new List<MainMenuEntry>();
         private readonly List<MenuEntry> _menuEntries = new List<MenuEntry>();
         private int _selectedEntry;
-        private readonly string _menuTitle;
 
         /// <summary>
         /// Gets the list of menu entries, so derived classes can add
@@ -26,14 +27,19 @@ namespace FlyingPsychadelia.Screens
             get { return _menuEntries; }
         }
 
+        public List<MainMenuEntry> MainMenuEntries
+        {
+            get { return _mainMenuEntries; }
+        }
+
         #region Initialization
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MenuScreen(string menuTitle)
+        protected MenuScreen()
         {
-            _menuTitle = menuTitle;
+            _mainMenuEntries = new List<MainMenuEntry>();
 
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
@@ -80,7 +86,6 @@ namespace FlyingPsychadelia.Screens
             }
         }
 
-
         /// <summary>
         /// Handler for when the user has chosen a menu entry.
         /// </summary>
@@ -89,7 +94,6 @@ namespace FlyingPsychadelia.Screens
             _menuEntries[entryIndex].OnSelectEntry(playerIndex);
         }
 
-
         /// <summary>
         /// Handler for when the user has cancelled the menu.
         /// </summary>
@@ -97,7 +101,6 @@ namespace FlyingPsychadelia.Screens
         {
             ExitScreen();
         }
-
 
         /// <summary>
         /// Helper overload makes it easy to use OnCancel as a MenuEntry event handler.
@@ -131,12 +134,16 @@ namespace FlyingPsychadelia.Screens
             foreach (MenuEntry menuEntry in _menuEntries)
             {
                 // each entry is to be centered horizontally
-                position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuEntry.GetWidth(this) / 2;
+                position.X = (ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuEntry.GetWidth(this) / 2);
 
                 if (ScreenState == ScreenState.TransitionOn)
+                {
                     position.X -= transitionOffset * 256;
+                }
                 else
+                {
                     position.X += transitionOffset * 512;
+                }
 
                 // set the entry's position
                 menuEntry.Position = position;
@@ -146,6 +153,42 @@ namespace FlyingPsychadelia.Screens
             }
         }
 
+        /// <summary>
+        /// Allows the screen the chance to position the menu entries. By default
+        /// all menu entries are lined up in a vertical list, centered on the screen.
+        /// </summary>
+        protected virtual void UpdateMainMenuEntryLocations()
+        {
+            // Make the menu slide into place during transitions, using a
+            // power curve to make things look more interesting (this makes
+            // the movement slow down as it nears the end).
+            var transitionOffset = (float)Math.Pow(TransitionPosition, 2);
+
+            // start at Y = 175; each X value is generated per entry
+            var position = new Vector2(0F, 85F);
+
+            // update each menu entry's location in turn
+            foreach (MainMenuEntry mainMenuEntry in _mainMenuEntries)
+            {
+                // each entry is to be centered horizontally
+                position.X = (ScreenManager.GraphicsDevice.Viewport.Width / 2);
+
+                if (ScreenState == ScreenState.TransitionOn)
+                {
+                    position.X -= transitionOffset * 256;
+                }
+                else
+                {
+                    position.X += transitionOffset * 512;
+                }
+
+                // set the entry's position
+                mainMenuEntry.Position = position;
+
+                // move down for the next entry the size of this entry
+                position.Y += mainMenuEntry.GetHeight(this);
+            }
+        }
 
         /// <summary>
         /// Updates the menu.
@@ -162,6 +205,11 @@ namespace FlyingPsychadelia.Screens
 
                 _menuEntries[i].Update(this, isSelected, gameTime);
             }
+
+            foreach (var mainMenuEntry in MainMenuEntries)
+            {
+                mainMenuEntry.Update(gameTime);
+            }
         }
 
 
@@ -172,6 +220,7 @@ namespace FlyingPsychadelia.Screens
         {
             // make sure our entries are in the right place before we draw them
             UpdateMenuEntryLocations();
+            UpdateMainMenuEntryLocations();
 
             GraphicsDevice graphics = ScreenManager.GraphicsDevice;
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
@@ -194,16 +243,10 @@ namespace FlyingPsychadelia.Screens
             // the movement slow down as it nears the end).
             var transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
-            // Draw the menu title centered on the screen
-            var titlePosition = new Vector2((float)graphics.Viewport.Width / 2, 80);
-            var titleOrigin = font.MeasureString(_menuTitle) / 2;
-            var titleColor = new Color(192, 192, 192) * TransitionAlpha;
-            float titleScale = 1.25f;
-
-            titlePosition.Y -= transitionOffset * 100;
-
-            spriteBatch.DrawString(font, _menuTitle, titlePosition, titleColor, 0,
-                                   titleOrigin, titleScale, SpriteEffects.None, 0);
+            foreach (var mainMenuEntry in _mainMenuEntries)
+            {
+                mainMenuEntry.Draw(this, gameTime, transitionOffset);
+            }
 
             spriteBatch.End();
         }

@@ -4,7 +4,7 @@ using FlyingPsychadelia.StateManager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FlyingPsychadelia.Screens
+namespace FlyingPsychadelia.Screens.Controls
 {
     /// <summary>
     /// Helper class represents a single entry in a MenuScreen. By default this
@@ -14,13 +14,6 @@ namespace FlyingPsychadelia.Screens
     /// </summary>
     public class MenuEntry
     {
-        #region Fields
-
-        /// <summary>
-        /// The text rendered for this entry.
-        /// </summary>
-        string _text;
-
         /// <summary>
         /// Tracks a fading selection effect on the entry.
         /// </summary>
@@ -29,41 +22,23 @@ namespace FlyingPsychadelia.Screens
         /// </remarks>
         float _selectionFade;
 
-        /// <summary>
-        /// The position at which the entry is drawn. This is set by the MenuScreen
-        /// each frame in Update.
-        /// </summary>
-        Vector2 _position;
-
-        #endregion
-
         #region Properties
-
 
         /// <summary>
         /// Gets or sets the text of this menu entry.
         /// </summary>
-        public string Text
-        {
-            get { return _text; }
-            set { _text = value; }
-        }
+        public string Text { get; set; }
 
+        public bool UseOffset { get; set; }
 
         /// <summary>
         /// Gets or sets the position at which to draw this menu entry.
         /// </summary>
-        public Vector2 Position
-        {
-            get { return _position; }
-            set { _position = value; }
-        }
-
+        public Vector2 Position { get; set; }
 
         #endregion
 
         #region Events
-
 
         /// <summary>
         /// Event raised when the menu entry is selected.
@@ -77,7 +52,10 @@ namespace FlyingPsychadelia.Screens
         protected internal virtual void OnSelectEntry(PlayerIndex playerIndex)
         {
             if (Selected != null)
+            {
                 Selected(this, new PlayerIndexEventArgs(playerIndex));
+            }
+
         }
 
 
@@ -85,43 +63,38 @@ namespace FlyingPsychadelia.Screens
 
         #region Initialization
 
-
         /// <summary>
         /// Constructs a new menu entry with the specified text.
         /// </summary>
-        public MenuEntry(string text)
+        public MenuEntry(string text, bool useOffset)
         {
-            _text = text;
+            Text = text;
+            UseOffset = useOffset;
         }
-
 
         #endregion
 
         #region Update and Draw
-
 
         /// <summary>
         /// Updates the menu entry.
         /// </summary>
         public virtual void Update(MenuScreen screen, bool isSelected, GameTime gameTime)
         {
-            // there is no such thing as a selected item on Windows Phone, so we always
-            // force isSelected to be false
-#if WINDOWS_PHONE
-            isSelected = false;
-#endif
-
             // When the menu selection changes, entries gradually fade between
             // their selected and deselected appearance, rather than instantly
             // popping to the new state.
             float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
 
             if (isSelected)
+            {
                 _selectionFade = Math.Min(_selectionFade + fadeSpeed, 1);
+            }
             else
+            {
                 _selectionFade = Math.Max(_selectionFade - fadeSpeed, 0);
+            }
         }
-
 
         /// <summary>
         /// Draws the menu entry. This can be overridden to customize the appearance.
@@ -129,7 +102,7 @@ namespace FlyingPsychadelia.Screens
         public virtual void Draw(MenuScreen screen, bool isSelected, GameTime gameTime)
         {
             // Draw the selected entry in yellow, otherwise white.
-            Color color = isSelected ? Color.Yellow : Color.White;
+            Color color = isSelected ? Color.DarkGreen : Color.Black;
 
             // Pulsate the size of the selected menu entry.
             double time = gameTime.TotalGameTime.TotalSeconds;
@@ -146,12 +119,16 @@ namespace FlyingPsychadelia.Screens
             SpriteBatch spriteBatch = screenManager.SpriteBatch;
             SpriteFont font = screenManager.Font;
 
-            var origin = new Vector2(0,(float) font.LineSpacing / 2);
+            var origin = new Vector2(0, (float)font.LineSpacing / 2);
 
-            spriteBatch.DrawString(font, _text, _position, color, 0,
+            if (UseOffset)
+            {
+                Position = new Vector2(Position.X - 150, Position.Y);
+            }
+
+            spriteBatch.DrawString(font, Text, Position, color, 0,
                                    origin, scale, SpriteEffects.None, 0);
         }
-
 
         /// <summary>
         /// Queries how much space this menu entry requires.
@@ -161,7 +138,6 @@ namespace FlyingPsychadelia.Screens
             return screen.ScreenManager.Font.LineSpacing;
         }
 
-
         /// <summary>
         /// Queries how wide the entry is, used for centering on the screen.
         /// </summary>
@@ -169,7 +145,6 @@ namespace FlyingPsychadelia.Screens
         {
             return (int)screen.ScreenManager.Font.MeasureString(Text).X;
         }
-
 
         #endregion
     }
