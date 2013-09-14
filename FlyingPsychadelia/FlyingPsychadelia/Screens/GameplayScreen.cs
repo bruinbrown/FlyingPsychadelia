@@ -18,6 +18,7 @@ namespace FlyingPsychadelia.Screens
     public class GameplayScreen : GameScreen
     {
         private ContentManager _content;
+        private IList<BaseEnemy> _enemies = new List<BaseEnemy>();
         private SpriteFont _gameFont;
 
         private Vector2 _playerPosition = new Vector2(100, 100);
@@ -27,10 +28,10 @@ namespace FlyingPsychadelia.Screens
 
         private float _pauseAlpha;
         private Map _map;
-        private Player _player;
-        private Player _player2;
+
         private World _world;
         private List<Player> Players = new List<Player>();
+        private ProgressionShader _progressionShader;
 
         #region Initialization
 
@@ -57,19 +58,40 @@ namespace FlyingPsychadelia.Screens
 
             _gameFont = _content.Load<SpriteFont>("gamefont");
 
-            _map = _content.Load<Map>("map1");
+            _map = _content.Load<Map>("map2");
             Players.Add(new Player(_content, new Player1KeyboardController()));
             Players.Add(new Player(_content, new Player2KeyboardController()));
             for (int i = 0; i < Players.Count; i++)
             {
                 Players[i].SetLocation(i * 50, 0);
             }
-            _world = new World(Players.ToArray(), _map.ObjectLayers[0].MapObjects);
+            var Random = new System.Random();
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    var x = Random.Next(_map.Width* _map.TileWidth);
+            //    var y = Random.Next(_map.Height * _map.TileHeight);
+            //    _enemies.Add(new StaticEnemy(_content,x,y));
+            //}
+            for (int i = 0; i < 50; i++)
+            {
+                var x = Random.Next(_map.Width * _map.TileWidth);
+                var y = Random.Next(_map.Height* _map.TileHeight);
+                _enemies.Add(new HorizontallyOscillatingEnemy(_content, x, y, 150));
+            }
+            for (int i = 0; i < 50; i++)
+            {
+                var x = Random.Next(_map.Width * _map.TileWidth);
+                var y = Random.Next(_map.Height * _map.TileHeight);
+                _enemies.Add(new VerticallyOscillatingEnemy(_content, x, y, 150));
+            } 
+            _world = new World(Players.ToArray(), _map);
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
             // timing mechanism that we have just finished a very long frame, and that
             // it should not try to catch up.
             ScreenManager.Game.ResetElapsedTime();
+
+            _progressionShader = new ProgressionShader(ScreenManager.GraphicsDevice, Color.Red);
         }
 
 
@@ -107,18 +129,19 @@ namespace FlyingPsychadelia.Screens
             {
                 foreach (Player player in Players)
                 {
-                    // Reset velocity for this frame
-                    player.Velocity = new Vector2(0, 0);
                     // Add gravity
-                    player.AddVeocity(new Vector2(0, 1));
+                    player.AddVeocity(new Vector2(player.Velocity.X*-0.2f, 1));
                     // Add Directional Velocity
                     player.DetectMovement();
                     // Move player based on cumulative velocity
                     player.Update(1);  // 1 doesnothing. Fix this for varying framerates.
                 }
-
+                foreach (BaseEnemy enemy in _enemies)
+                {
+                    enemy.Update(1);
+                }
                 // Resolve Collisions 
-                _world.ResolveCollisions();
+                _world.Update();
             }
         }
 
@@ -192,10 +215,17 @@ namespace FlyingPsychadelia.Screens
 
             spriteBatch.Begin();
 
-            _map.Draw(spriteBatch, new Rectangle(0, 0, 320, 320));
+            _progressionShader.Draw(spriteBatch, _world.Progression / _map.Width);
+
+            Rectangle Camera = new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height);
+            _map.Draw(spriteBatch, Camera);
             foreach (Player player in Players)
             {
                 player.Draw(spriteBatch);
+            }
+            foreach (BaseEnemy enemy in _enemies)
+            {
+                enemy.Draw(spriteBatch);
             }
 
             spriteBatch.End();

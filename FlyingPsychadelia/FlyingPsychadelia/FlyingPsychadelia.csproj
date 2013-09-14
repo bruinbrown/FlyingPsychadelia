@@ -35,17 +35,21 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BlockingObject.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="ICollidable.cs" />
     <Compile Include="IController.cs" />
-    <Compile Include="BaseEnemy.cs" />
+    <Compile Include="Sprites\BaseEnemy.cs" />
+    <Compile Include="Sprites\HorizontallyOscillatingEnemy.cs" />
+    <Compile Include="Sprites\OscillatingEnemy.cs" />
     <Compile Include="Player1KeyboardController.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="Sprites\VerticallyOscillatingEnemy.cs" />
+    <Compile Include="Sprites\Player.cs" />
     <Compile Include="Player2KeyboardController.cs" />
-    <Compile Include="MovableSprite.cs" />
+    <Compile Include="Sprites\MovableSprite.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ProgressionShader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sprites\RandomMovingEnemy.cs" />
     <Compile Include="Screens\BackgroundScreen.cs" />
     <Compile Include="Screens\Controls\MainMenuEntry.cs" />
     <Compile Include="Screens\Events\PlayerIndexEventArgs.cs" />
@@ -57,6 +61,7 @@
     <Compile Include="Screens\MessageBoxScreen.cs" />
     <Compile Include="Screens\OptionsMenuScreen.cs" />
     <Compile Include="Screens\PauseMenuScreen.cs" />
+    <Compile Include="Sprites\StaticEnemy.cs" />
     <Compile Include="StateManager\GameStateManagement.cs" />
     <Compile Include="StateManager\InputState.cs" />
     <Compile Include="StateManager\ScreenManager.cs" />
@@ -87,13 +92,29 @@
       <Link>SDL.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\dragon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Jump1.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\leprechaun.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Jump2.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Jump3.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\leprechaun.png" />
     <Content Include="Content\Player.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Select.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />
@@ -122,6 +143,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\menufont.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\map2.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\map2\00.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\map2\01.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
