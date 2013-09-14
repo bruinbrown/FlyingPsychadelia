@@ -1,6 +1,8 @@
-﻿#region Using Statements
-using System;
+﻿using System;
 using System.Collections.Generic;
+using FlyingPsychadelia.Screens;
+using FlyingPsychadelia.Screens.GameStateManagement;
+using FlyingPsychadelia.StateManager;
 using FuncWorks.XNA.XTiled;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -8,7 +10,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
-#endregion
 
 namespace FlyingPsychadelia
 {
@@ -19,17 +20,29 @@ namespace FlyingPsychadelia
     {
         private Player _player2;
         private World _world;
-        GraphicsDeviceManager graphics;
+        private GraphicsDeviceManager graphics;
         private List<Player> Players = new List<Player>();
         SpriteBatch spriteBatch;
         private Map _map;
         private Player _player;
+        private ScreenManager _screenManager;
 
         public Game1()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 600;
+
+            _screenManager = new ScreenManager(this);
+
             Content.RootDirectory = "Content";
+
+            Components.Add(_screenManager);
+
+            // Activate the first screens.
+            _screenManager.AddScreen(new BackgroundScreen(), null);
+            _screenManager.AddScreen(new MainMenuScreen(), null);
         }
 
         /// <summary>
@@ -54,6 +67,8 @@ namespace FlyingPsychadelia
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Map.InitObjectDrawing(GraphicsDevice);
+            Content.Load<object>("gradient");
+
             _map = Content.Load<Map>("map1");
             _player = new Player(Content.Load<Texture2D>("Player.png"), 0, 0, new Player1KeyboardController());
             _player2 = new Player(Content.Load<Texture2D>("Player.png"), 50, 0, new Player2KeyboardController());
