@@ -70,11 +70,13 @@ namespace FlyingPsychadelia
             Content.Load<object>("gradient");
 
             _map = Content.Load<Map>("map1");
-            _player = new Player(Content.Load<Texture2D>("Player.png"), 0, 0, new Player1KeyboardController());
-            _player2 = new Player(Content.Load<Texture2D>("Player.png"), 50, 0, new Player2KeyboardController());
-            Players.Add(_player);
-            Players.Add(_player2);
-            _world = new World(new Player[] { _player, _player2 }, _map.ObjectLayers[0].MapObjects);
+            Players.Add(new Player(Content, new Player1KeyboardController()));
+            Players.Add(new Player(Content, new Player2KeyboardController()));
+            for (int i = 0; i < Players.Count; i++)
+            {
+                Players[i].SetLocation(i * 50, 0);
+            }
+            _world = new World(Players.ToArray(), _map.ObjectLayers[0].MapObjects);
             // TODO: use this.Content to load your game content here
         }
 
