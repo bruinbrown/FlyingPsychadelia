@@ -17,6 +17,7 @@ namespace FlyingPsychadelia
     /// </summary>
     public class Game1 : Game
     {
+        private World _world;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         private Map _map;
@@ -53,9 +54,11 @@ namespace FlyingPsychadelia
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Map.InitObjectDrawing(GraphicsDevice);
             _map = Content.Load<Map>("map1");
-            BlockingObjects = _map.ObjectLayers[0].MapObjects;
+            World.BlockingObjects = _map.ObjectLayers[0].MapObjects;
             Texture2D _PlayerTexture = Content.Load<Texture2D>("Player.png");
-            _player = new Player(_PlayerTexture, 0, 0);
+            IController MyController = new KeyboardController();
+            _player = new Player(_PlayerTexture, 0, 0, MyController);
+            _world = new World(_player);
             // TODO: use this.Content to load your game content here
         }
 
@@ -78,40 +81,17 @@ namespace FlyingPsychadelia
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-
+            // Reset velocity for this frame
             _player.Velocity = new Vector2(0, 0);
-            int MoveMagnitude = 1;
+            // Add gravity
             _player.AddVeocity(new Vector2(0, 1));
-            // TODO: Add your update logic here
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
-            {
-                _player.AddVeocity(new Vector2(MoveMagnitude, 0));
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.Left))
-            {
-                _player.AddVeocity(new Vector2(-MoveMagnitude, 0));
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
-            {
-                _player.AddVeocity(new Vector2(0, -MoveMagnitude * 2));
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.Down))
-            {
-                _player.AddVeocity(new Vector2(0, MoveMagnitude));
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
-            {
-                _player.AddVeocity(new Vector2(0, -20));
-            }
+            // Add Directional Velocity
+            _player.DetectMovement();
+            // Move player based on cumulative velocity
+            _player.Update(1);  // 1 doesnothing. Fix this for varying framerates.
 
-            _player.Update(1);
-            // Process Gravity
-            foreach (MapObject Object in BlockingObjects)
-            {
-                if (_player.Bounds.Intersects(Object.Bounds))
-                    FixUpPlayer(_player, Object);
-            }
-
+            // Resolve Collisions 
+            _world.ResolveCollisions();
             base.Update(gameTime);
         }
 
@@ -124,7 +104,7 @@ namespace FlyingPsychadelia
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
-
+            
             _map.Draw(spriteBatch, new Rectangle(0, 0, 320, 320));
             _player.Draw(spriteBatch);
 
@@ -132,104 +112,9 @@ namespace FlyingPsychadelia
 
             base.Draw(gameTime);
         }
-        private void FixUpPlayer(Player player, MapObject TheObject)
-        {
-            //int dy = 1000;
-            //int dx = 1000;
+        
 
-
-            
-            //    var x11 = player.Bounds.Left;
-            //    var y11 = player.Bounds.Top;
-            //    var x12 = player.Bounds.Left + TheObject.Bounds.Width;
-            //    var y12 = player.Bounds.Top + TheObject.Bounds.Height;
-            //    var x21 = TheObject.Bounds.Left;
-            //    var y21 = TheObject.Bounds.Top;
-            //    var x22 = TheObject.Bounds.Left + player.Bounds.Width;
-            //    var y22 = TheObject.Bounds.Top + player.Bounds.Height;
-            //    
-            //    /*x_overlap = x12<x21 || x11>x22 ? 0 : Math.min(x12,x22) - Math.max(x11,x21),
-            //    y_overlap = y12<y21 || y11>y22 ? 0 : Math.min(y12,y22) - Math.max(y11,y21);*/
-            //
-            //    dx = Math.Max(0, Math.Min(x12,x22) - Math.Max(x11,x21));
-            //    dy = Math.Max(0, Math.Min(y12,y22) - Math.Max(y11,y21));
-
-
-
-            // // Determine if overlap is primarily in X or Y
-            // if (player.Velocity.X > 0)
-            //     dx = player.Bounds.Right - TheObject.Bounds.Left;
-            // if (player.Velocity.X < 0)
-            //     dx = player.Bounds.Left - TheObject.Bounds.Right;
-
-            // 
-
-
-            // if (player.Velocity.Y < 0)
-            //     dy = player.Bounds.Top - TheObject.Bounds.Bottom;
-            // if (player.Velocity.Y > 0)
-            //     dy = player.Bounds.Bottom - TheObject.Bounds.Top;
-
-            //if (player.Velocity.X == 0)
-            //     dy=0;
-            //if (player.Velocity.Y == 0)
-            //    dx=0;
-
-
-            var Overlap = Rectangle.Intersect(player.Bounds, TheObject.Bounds);
-            var dx = Overlap.Width;
-            var dy = Overlap.Height;
-
-
-
-            //if (player.Velocity.X > player.Velocity.Y )
-            //if (dx == 0 && dy == 0)
-            //    throw new Exception("");
-            if (Math.Abs(dx) > Math.Abs(dy))
-            {
-                // Correct Vertical
-                if (player.Velocity.Y < 0)
-                {
-                    // Adjust down
-                    OffsetPlayerBounds(player,
-                   0,
-                   dy);
-                }
-
-                if (player.Velocity.Y > 0)
-                {
-                    // Adjust up
-                    OffsetPlayerBounds(player,
-                   0, -dy);
-                }
-                player.Velocity.Y = 0.0f;
-            }
-            else
-            {
-                // Correct Horizontal
-                if (player.Velocity.X < 0) // Moving Left
-                {
-                    // Adjust Right
-                    OffsetPlayerBounds(player,
-
-                   dx, 0);
-
-                }
-                if (player.Velocity.X > 0)
-                {
-                    // Adjust Left
-
-                    OffsetPlayerBounds(player, -dx, 0);
-
-                }
-                player.Velocity.X = 0.0f;
-            }
-
-        }
-        private static void OffsetPlayerBounds(Player player, int myDx, int Mydy)
-        {
-            player.Bounds = new Rectangle(player.Bounds.X + myDx, player.Bounds.Y + Mydy, player.Bounds.Width, player.Bounds.Height);
-        }
     }
 
 }
+
