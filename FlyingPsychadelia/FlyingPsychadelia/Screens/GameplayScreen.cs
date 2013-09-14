@@ -31,6 +31,7 @@ namespace FlyingPsychadelia.Screens
 
         private World _world;
         private List<Player> Players = new List<Player>();
+        private ProgressionShader _progressionShader;
 
         #region Initialization
 
@@ -77,12 +78,14 @@ namespace FlyingPsychadelia.Screens
                 var y = Random.Next(_map.Height* _map.TileHeight);
                 _enemies.Add(new OscillatingEnemy(_content, x, y));
             }
-            _world = new World(Players.ToArray(), _map.ObjectLayers[0].MapObjects);
+            _world = new World(Players.ToArray(), _map);
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
             // timing mechanism that we have just finished a very long frame, and that
             // it should not try to catch up.
             ScreenManager.Game.ResetElapsedTime();
+
+            _progressionShader = new ProgressionShader(ScreenManager.GraphicsDevice, Color.Red);
         }
 
 
@@ -134,7 +137,7 @@ namespace FlyingPsychadelia.Screens
                     enemy.Update(1);
                 }
                 // Resolve Collisions 
-                _world.ResolveCollisions();
+                _world.Update();
             }
         }
 
@@ -207,6 +210,8 @@ namespace FlyingPsychadelia.Screens
             var spriteBatch = ScreenManager.SpriteBatch;
 
             spriteBatch.Begin();
+
+            _progressionShader.Draw(spriteBatch, _world.Progression/_map.Width);
 
             _map.Draw(spriteBatch, new Rectangle(0, 0, 320, 320));
             foreach (Player player in Players)

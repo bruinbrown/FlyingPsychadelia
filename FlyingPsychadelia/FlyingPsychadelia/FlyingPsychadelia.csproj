@@ -45,6 +45,7 @@
     <Compile Include="Player2KeyboardController.cs" />
     <Compile Include="Sprites\MovableSprite.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ProgressionShader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sprites\RandomMovingEnemy.cs" />
     <Compile Include="Screens\BackgroundScreen.cs" />
@@ -120,6 +121,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\menufont.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\map2.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\map2\00.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\map2\01.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
