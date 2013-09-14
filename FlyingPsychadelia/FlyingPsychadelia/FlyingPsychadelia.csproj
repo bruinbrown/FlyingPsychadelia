@@ -41,6 +41,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="DebugView MonoGame">
+      <HintPath>..\..\Lib\DebugView MonoGame.dll</HintPath>
+    </Reference>
+    <Reference Include="FarseerPhysics MonoGame">
+      <HintPath>..\..\Lib\FarseerPhysics MonoGame.dll</HintPath>
+    </Reference>
     <Reference Include="FuncWorks.XNA.XTiled, Version=0.8.1.1, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Lib\FuncWorks.XNA.XTiled.dll</HintPath>
@@ -70,12 +76,18 @@
     </Content>
     <Content Include="Icon.ico" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="Content\map1.xnb">
+    <Content Include="Content\Font.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Content\map1\00.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\map1.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
