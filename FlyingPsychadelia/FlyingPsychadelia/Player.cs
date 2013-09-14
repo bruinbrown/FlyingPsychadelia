@@ -13,12 +13,6 @@ namespace FlyingPsychadelia
         private Rectangle _Rectangle;
         private Texture2D _Texture;
         public Vector2 Velocity;
-        public void MoveLeft()
-        {
-            _Rectangle.X  -= 10;
-        }
-                                     
-                                     
         public Rectangle Bounds
         {
             get
@@ -35,9 +29,14 @@ namespace FlyingPsychadelia
         {
             spriteBatch.Draw(_Texture,Bounds, Color.White);
         }
-        public void MoveRight()
+        public void Update(float gametime)
         {
-            _Rectangle.X += 10;
+            // Apply current velocity to rectangle X and Y
+            _Rectangle.Offset((int)Math.Floor(Velocity.X), (int)Math.Floor(Velocity.Y));
+        }
+        public void AddVeocity(Vector2 vector2)
+        {
+            Velocity = new Vector2(Velocity.X + vector2.X, Velocity.Y + vector2.Y);
         }
         public bool MovingUp()
         {

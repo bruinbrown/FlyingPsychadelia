@@ -21,6 +21,8 @@ namespace FlyingPsychadelia
         SpriteBatch spriteBatch;
         private Map _map;
         private Player _player;
+        private MapObject[] BlockingObjects;
+
         public Game1()
             : base()
         {
@@ -51,6 +53,7 @@ namespace FlyingPsychadelia
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Map.InitObjectDrawing(GraphicsDevice);
             _map = Content.Load<Map>("map1");
+            BlockingObjects = _map.ObjectLayers[0].MapObjects;
             Texture2D _PlayerTexture = Content.Load<Texture2D>("Player.png");
             _player = new Player(_PlayerTexture, 0, 0);
             // TODO: use this.Content to load your game content here
@@ -75,16 +78,33 @@ namespace FlyingPsychadelia
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            // Process Gravity
+            foreach (MapObject Object in BlockingObjects)
+            {
+                if (_player.Bounds.Intersects(Object.Bounds))
+                    FixUpPlayer(_player, Object);
+            }
+
+            _player.Velocity = new Vector2(0,0);
+            _player.AddVeocity(new Vector2(0, 10));
             // TODO: Add your update logic here
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
-                _player.MoveRight();
+                _player.AddVeocity(new Vector2(10,0));
             }
             else if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-                _player.MoveLeft();
+                _player.AddVeocity(new Vector2(-10, 0));
             }
-
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            {
+                _player.AddVeocity(new Vector2(0, -10));
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            {
+                _player.AddVeocity(new Vector2(0, 10));
+            }
+            _player.Update(1);
             base.Update(gameTime);
         }
 
@@ -104,6 +124,54 @@ namespace FlyingPsychadelia
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+        private void FixUpPlayer(Player player, MapObject TheObject)
+        {
+            int dy = 0;
+            int dx = 0;
+
+            // Determine if overlap is primarily in X or Y
+            if (player.MovingRight())
+                dx = player.Bounds.Right - TheObject.Bounds.Left;
+            else
+                dx = player.Bounds.Left - TheObject.Bounds.Right;
+
+            if (player.MovingUp())
+                dy = player.Bounds.Top - TheObject.Bounds.Bottom;
+            else
+                dy = player.Bounds.Bottom - TheObject.Bounds.Top;
+
+            if (Math.Abs(dx) > Math.Abs(dy))
+            {
+                // Correct Vertical
+                if (player.MovingUp())
+                {
+                    // Adjust down
+                    player.Bounds.Offset(0, dy + 1);
+                }
+                else
+                {
+                    // Adjust up
+                    player.Bounds.Offset(0, dy - 1);
+                }
+                player.Velocity.Y = 0.0f;
+            }
+            else
+            {
+                // Correct Horizontal
+                if (player.MovingRight())
+                {
+                    // Adjust Left
+                    player.Bounds.Offset(dx - 1, 0);
+                }
+                else
+                {
+                    // Adjust Right
+                    player.Bounds.Offset(dx + 1, 0);
+                }
+                player.Velocity.X = 0.0f;
+            }
+
         }
     }
 }
