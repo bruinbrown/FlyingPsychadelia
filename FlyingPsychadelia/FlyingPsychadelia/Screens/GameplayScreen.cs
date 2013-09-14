@@ -21,9 +21,6 @@ namespace FlyingPsychadelia.Screens
         private IList<BaseEnemy> _enemies = new List<BaseEnemy>();
         private SpriteFont _gameFont;
 
-        private Vector2 _playerPosition = new Vector2(100, 100);
-        private Vector2 _enemyPosition = new Vector2(100, 100);
-
         private Random _random = new Random();
 
         private float _pauseAlpha;
@@ -129,6 +126,7 @@ namespace FlyingPsychadelia.Screens
             {
                 foreach (Player player in Players)
                 {
+                    player.Velocity = Vector2.Zero;
                     // Add gravity
                     player.AddVeocity(new Vector2(player.Velocity.X*-0.2f, 1));
                     // Add Directional Velocity
@@ -174,30 +172,10 @@ namespace FlyingPsychadelia.Screens
             }
             else
             {
-                // Otherwise move the player position.
-                Vector2 movement = Vector2.Zero;
-
-                if (keyboardState.IsKeyDown(Keys.Left))
-                    movement.X--;
-
-                if (keyboardState.IsKeyDown(Keys.Right))
-                    movement.X++;
-
-                if (keyboardState.IsKeyDown(Keys.Up))
-                    movement.Y--;
-
-                if (keyboardState.IsKeyDown(Keys.Down))
-                    movement.Y++;
-
-                Vector2 thumbstick = gamePadState.ThumbSticks.Left;
-
-                movement.X += thumbstick.X;
-                movement.Y -= thumbstick.Y;
-
-                if (movement.Length() > 1)
-                    movement.Normalize();
-
-                _playerPosition += movement * 2;
+                //foreach (Player player in Players)
+                //{
+                //    player.DetectMovement();
+                //}               
             }
         }
 

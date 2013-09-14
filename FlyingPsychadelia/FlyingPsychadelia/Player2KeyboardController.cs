@@ -13,6 +13,10 @@ namespace FlyingPsychadelia
     public class Player2KeyboardController : IController
     {
 
+        public bool DetectFire()
+        {
+           return Keyboard.GetState().IsKeyDown(Keys.Space );
+        }
         public bool DetectJump()
         {
             return Keyboard.GetState().IsKeyDown(Keys.W);
