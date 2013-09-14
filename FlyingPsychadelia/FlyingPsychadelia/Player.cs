@@ -5,13 +5,20 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using FuncWorks.XNA.XTiled;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
 
 namespace FlyingPsychadelia
 {
     public class Player : MovableSprite, ICollidable
     {
         private readonly IController _controller;
-
+        private void JumpSound()
+        {
+           // SoundEffect soundEffect;
+         //   soundEffect = Content.Load<SoundEffect>("Jump1");
+       //     soundEffect.Play();
+        }
         public void DetectMovement()
         {
             int MoveMagnitude = 1;
@@ -36,11 +43,20 @@ namespace FlyingPsychadelia
                 AddVeocity(new Vector2(0, -20));
             }
         }
-
-
-        public Player(Texture2D texture, int X, int Y, IController Controller):base(texture,X,Y)
+        public Player(ContentManager content, IController Controller)
+            : base(content)
         {
             _controller = Controller;
+            SetTexture("Player.png");
+        }
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(_Texture,Bounds, Color.White);
+        }
+        public void Update(float gametime)
+        {
+            // Apply current velocity to rectangle X and Y
+            _bounds.Offset((int)Math.Floor(Velocity.X), (int)Math.Floor(Velocity.Y));
         }
         public void AddVeocity(Vector2 vector2)
         {
@@ -53,14 +69,6 @@ namespace FlyingPsychadelia
         public bool MovingRight()
         {
             return Velocity.X > 0;
-            
-        }
-    }
-    public class Enemy
-    {
-        
-        public Enemy()
-        {
             
         }
     }

@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,8 @@ namespace FlyingPsychadelia
 {
     public class BaseEnemy : MovableSprite
     {
-        public BaseEnemy(Texture2D texture, int X, int Y)
-            : base(texture, X, Y)
+        public BaseEnemy(ContentManager content)
+            : base(content)
         {
 
         }
