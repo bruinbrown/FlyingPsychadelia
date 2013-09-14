@@ -1,4 +1,5 @@
-﻿using FlyingPsychadelia.Screens.Events;
+﻿using FlyingPsychadelia.Screens.Controls;
+using FlyingPsychadelia.Screens.Events;
 
 namespace FlyingPsychadelia.Screens
 {
@@ -32,17 +33,17 @@ namespace FlyingPsychadelia.Screens
         /// Constructor.
         /// </summary>
         public OptionsMenuScreen()
-            : base("Options")
         {
+            MainMenuEntries.Add(new MainMenuEntry("Options", true));
             // Create our menu entries.
-            _ungulateMenuEntry = new MenuEntry(string.Empty);
-            _languageMenuEntry = new MenuEntry(string.Empty);
-            _frobnicateMenuEntry = new MenuEntry(string.Empty);
-            _elfMenuEntry = new MenuEntry(string.Empty);
+            _ungulateMenuEntry = new MenuEntry(string.Empty, true);
+            _languageMenuEntry = new MenuEntry(string.Empty, true);
+            _frobnicateMenuEntry = new MenuEntry(string.Empty, true);
+            _elfMenuEntry = new MenuEntry(string.Empty, true);
 
             SetMenuEntryText();
 
-            var back = new MenuEntry("Back");
+            var back = new MenuEntry("Back", true);
 
             // Hook up menu event handlers.
             _ungulateMenuEntry.Selected += UngulateMenuEntrySelected;

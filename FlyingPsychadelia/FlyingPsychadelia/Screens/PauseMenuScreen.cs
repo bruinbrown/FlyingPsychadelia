@@ -1,4 +1,5 @@
-﻿using FlyingPsychadelia.Screens.Events;
+﻿using FlyingPsychadelia.Screens.Controls;
+using FlyingPsychadelia.Screens.Events;
 using FlyingPsychadelia.Screens.GameStateManagement;
 
 namespace FlyingPsychadelia.Screens
@@ -15,11 +16,11 @@ namespace FlyingPsychadelia.Screens
         /// Constructor.
         /// </summary>
         public PauseMenuScreen()
-            : base("Paused")
         {
+            MainMenuEntries.Add(new MainMenuEntry("Paused", false));
             // Create our menu entries.
-            var resumeGameMenuEntry = new MenuEntry("Resume Game");
-            var quitGameMenuEntry = new MenuEntry("Quit Game");
+            var resumeGameMenuEntry = new MenuEntry("Resume Game", false);
+            var quitGameMenuEntry = new MenuEntry("Quit Game", false);
 
             // Hook up menu event handlers.
             resumeGameMenuEntry.Selected += OnCancel;

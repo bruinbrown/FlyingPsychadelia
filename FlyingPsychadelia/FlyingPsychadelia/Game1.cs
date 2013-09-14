@@ -19,7 +19,7 @@ namespace FlyingPsychadelia
             _graphics = new GraphicsDeviceManager(this)
                 {
                     PreferredBackBufferWidth = 800,
-                    PreferredBackBufferHeight = 600
+                    PreferredBackBufferHeight = 480
                 };
 
             _screenManager = new ScreenManager(this);
