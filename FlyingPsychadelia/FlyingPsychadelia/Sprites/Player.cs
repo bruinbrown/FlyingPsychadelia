@@ -13,12 +13,13 @@ namespace FlyingPsychadelia
     public class Player : MovableSprite, ICollidable
     {
         private readonly IController _controller;
-        private SoundEffect _Jump;
+        private SoundEffect[] _Jump;
         public bool _IsLanded;
+        private Random _random;
 
         private void JumpSound()
         {
-               _Jump.Play();
+            _Jump[ _random.Next()%3 ].Play();
         }
         public void DetectMovement()
         {
@@ -54,11 +55,15 @@ namespace FlyingPsychadelia
         public Player(ContentManager content, IController Controller)
             : base(content)
         {
-            _Jump = content.Load<SoundEffect>("Jump1");
+            _Jump = new SoundEffect[3];
+            _Jump[0] = content.Load<SoundEffect>("Jump1");
+            _Jump[1] = content.Load<SoundEffect>("Jump2");
+            _Jump[2] = content.Load<SoundEffect>("Jump3");
 
             _controller = Controller;
             SetTexture("leprechaun.png");
             _IsLanded = true;
+            _random = new Random();
         }
         public void Draw(SpriteBatch spriteBatch)
         {
