@@ -73,7 +73,7 @@ namespace FlyingPsychadelia.Screens
             for (int i = 0; i < 50; i++)
             {
                 var x = Random.Next(_map.Width * _map.TileWidth);
-                var y = Random.Next(_map.Height* _map.TileHeight);
+                var y = Random.Next(_map.Height * _map.TileHeight);
                 _enemies.Add(new HorizontallyOscillatingEnemy(_content, x, y, 150));
             }
             for (int i = 0; i < 50; i++)
@@ -81,7 +81,7 @@ namespace FlyingPsychadelia.Screens
                 var x = Random.Next(_map.Width * _map.TileWidth);
                 var y = Random.Next(_map.Height * _map.TileHeight);
                 _enemies.Add(new VerticallyOscillatingEnemy(_content, x, y, 150));
-            } 
+            }
             _world = new World(_map, Players, _enemies);
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
@@ -125,7 +125,8 @@ namespace FlyingPsychadelia.Screens
 
             if (IsActive)
             {
-                
+                Point point = _world.Players[0].Bounds.Center;
+                Camera.Instance.SetCamera(new Vector2(point.X, point.Y));
                 _world.Update();
             }
         }
@@ -160,7 +161,7 @@ namespace FlyingPsychadelia.Screens
             else
             {
                 //foreach (Player player in Players)
- h              //{
+                //{
                 //    player.DetectMovement();
                 //}               
             }

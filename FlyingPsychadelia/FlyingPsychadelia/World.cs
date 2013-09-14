@@ -16,6 +16,13 @@ namespace FlyingPsychadelia
         private List<MapObjectWrapper> _BlockingObjects { get; set; }
         public int Progression { get; set; }
 
+        public List<Player> Players
+        {
+            get
+            {
+                return _players;
+            }
+        }
         public World(Map map, List<Player> Players, List<BaseEnemy> Enemies)
         {
             _enemies = Enemies;
@@ -25,7 +32,7 @@ namespace FlyingPsychadelia
         }
         public void Update()
         {
-            foreach (Player player in _players)
+            foreach (Player player in Players)
             {
                 player.Velocity = Vector2.Zero;
                 // Add gravity
@@ -45,7 +52,7 @@ namespace FlyingPsychadelia
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (Player player in _players)
+            foreach (Player player in Players)
             {
                 player.Draw(spriteBatch);
             }
@@ -56,14 +63,14 @@ namespace FlyingPsychadelia
         }
         private void CalculateMaxProgression()
         {
-            var currentProgress = _players.Select(p => p.Bounds.Center.X).Max();
+            var currentProgress = Players.Select(p => p.Bounds.Center.X).Max();
             Progression = Math.Max(Progression, currentProgress);
         }
 
         private void ResolveCollisions()
         {
             List<MapObjectWrapper> _BlockingObjects1 = _BlockingObjects;
-            foreach (Player player in _players)
+            foreach (Player player in Players)
             {
                 foreach (var Object in _BlockingObjects1)
                 {
@@ -72,9 +79,9 @@ namespace FlyingPsychadelia
                 }
             }
 
-            foreach (var player in _players)
+            foreach (var player in Players)
             {
-                foreach (var player1 in _players.Except(new[] {player}))
+                foreach (var player1 in Players.Except(new[] { player }))
                 {
                     FixUpCollision(player, player1);
                 }
