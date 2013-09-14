@@ -10,28 +10,28 @@ using Microsoft.Xna.Framework.GamerServices;
 
 namespace FlyingPsychadelia
 {
-    public class KeyboardController : IController
+    public class Player2KeyboardController : IController
     {
 
         public bool DetectJump()
         {
-            return Keyboard.GetState().IsKeyDown(Keys.Space);
+            return Keyboard.GetState().IsKeyDown(Keys.W);
         }
         public bool DetectRight()
         {
-            return Keyboard.GetState().IsKeyDown(Keys.Right);
+            return Keyboard.GetState().IsKeyDown(Keys.D);
         }
         public bool DetectLeft()
         {
-            return Keyboard.GetState().IsKeyDown(Keys.Left);
+            return Keyboard.GetState().IsKeyDown(Keys.A);
         }
         public bool DetectUp()
         {
-            return Keyboard.GetState().IsKeyDown(Keys.Up);
+            return Keyboard.GetState().IsKeyDown(Keys.Q);
         }
         public bool DetectDown()
         {
-            return Keyboard.GetState().IsKeyDown(Keys.Down);
+            return Keyboard.GetState().IsKeyDown(Keys.S);
         }
     }
 }

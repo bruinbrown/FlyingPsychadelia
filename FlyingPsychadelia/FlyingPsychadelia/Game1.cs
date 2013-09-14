@@ -17,12 +17,13 @@ namespace FlyingPsychadelia
     /// </summary>
     public class Game1 : Game
     {
+        private Player _player2;
         private World _world;
         GraphicsDeviceManager graphics;
+        private List<Player> Players = new List<Player>();
         SpriteBatch spriteBatch;
         private Map _map;
         private Player _player;
-        private MapObject[] BlockingObjects;
 
         public Game1()
             : base()
@@ -54,11 +55,11 @@ namespace FlyingPsychadelia
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Map.InitObjectDrawing(GraphicsDevice);
             _map = Content.Load<Map>("map1");
-            World.BlockingObjects = _map.ObjectLayers[0].MapObjects;
-            Texture2D _PlayerTexture = Content.Load<Texture2D>("Player.png");
-            IController MyController = new KeyboardController();
-            _player = new Player(_PlayerTexture, 0, 0, MyController);
-            _world = new World(_player);
+            _player = new Player(Content.Load<Texture2D>("Player.png"), 0, 0, new Player1KeyboardController());
+            _player2 = new Player(Content.Load<Texture2D>("Player.png"), 50, 0, new Player2KeyboardController());
+            Players.Add(_player);
+            Players.Add(_player2);
+            _world = new World(new Player[] { _player, _player2 }, _map.ObjectLayers[0].MapObjects);
             // TODO: use this.Content to load your game content here
         }
 
@@ -80,15 +81,17 @@ namespace FlyingPsychadelia
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            // Reset velocity for this frame
-            _player.Velocity = new Vector2(0, 0);
-            // Add gravity
-            _player.AddVeocity(new Vector2(0, 1));
-            // Add Directional Velocity
-            _player.DetectMovement();
-            // Move player based on cumulative velocity
-            _player.Update(1);  // 1 doesnothing. Fix this for varying framerates.
+            foreach (Player player in Players)
+            {
+                // Reset velocity for this frame
+                player.Velocity = new Vector2(0, 0);
+                // Add gravity
+                player.AddVeocity(new Vector2(0, 1));
+                // Add Directional Velocity
+                player.DetectMovement();
+                // Move player based on cumulative velocity
+                player.Update(1);  // 1 doesnothing. Fix this for varying framerates.
+            }
 
             // Resolve Collisions 
             _world.ResolveCollisions();
@@ -104,9 +107,12 @@ namespace FlyingPsychadelia
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
-            
+
             _map.Draw(spriteBatch, new Rectangle(0, 0, 320, 320));
-            _player.Draw(spriteBatch);
+            foreach (Player player in Players)
+            {
+                player.Draw(spriteBatch);
+            }
 
             spriteBatch.End();
 
