@@ -55,8 +55,8 @@ namespace FlyingPsychadelia
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Map.InitObjectDrawing(GraphicsDevice);
             _map = Content.Load<Map>("map1");
-            _player = new Player(Content.Load<Texture2D>("Player.png"), 0, 0, new Player1KeyboardController());
-            _player2 = new Player(Content.Load<Texture2D>("Player.png"), 50, 0, new Player2KeyboardController());
+            _player = new Player(Content, 0, 0, new Player1KeyboardController());
+            _player2 = new Player(Content, 50, 0, new Player2KeyboardController());
             Players.Add(_player);
             Players.Add(_player2);
             _world = new World(new Player[] { _player, _player2 }, _map.ObjectLayers[0].MapObjects);
