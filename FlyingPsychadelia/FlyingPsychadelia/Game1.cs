@@ -1,6 +1,7 @@
 ﻿#region Using Statements
 using System;
 using System.Collections.Generic;
+using FuncWorks.XNA.XTiled;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,6 +19,8 @@ namespace FlyingPsychadelia
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        private Map _map;
+        private Rectangle _player;
 
         public Game1()
             : base()
@@ -47,7 +50,9 @@ namespace FlyingPsychadelia
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            Map.InitObjectDrawing(GraphicsDevice);
+            _map = Content.Load<Map>("map1");
+            _player = _map.SourceTiles[0].Source; ;
             // TODO: use this.Content to load your game content here
         }
 
@@ -71,6 +76,14 @@ namespace FlyingPsychadelia
                 Exit();
 
             // TODO: Add your update logic here
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                _player.X += 10;
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
+                _player.X -= 10;
+            }
 
             base.Update(gameTime);
         }
@@ -83,7 +96,16 @@ namespace FlyingPsychadelia
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+
+            _map.Draw(spriteBatch, new Rectangle(0, 0, 320, 320));
+
+
+            spriteBatch.Draw(_map.Tilesets[_map.SourceTiles[0].TilesetID].Texture,
+                             Map.Translate(_player, new Rectangle(0, 0, 320, 320)),
+                           _map.SourceTiles[0].Source, Color.White);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
