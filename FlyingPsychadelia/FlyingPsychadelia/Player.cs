@@ -5,32 +5,25 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using FuncWorks.XNA.XTiled;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
 
 namespace FlyingPsychadelia
 {
-    public class Player : ICollidable
+    public class Player : MovableSprite, ICollidable
     {
-        public Rectangle Bounds
-        {
-            get
-            {
-                return _bounds;
-            }
-            set
-            {
-                _bounds = value;
-            }
-        }
-        public Vector2 Velocity{get; set;}
-
-        private Rectangle _bounds;
-        private Texture2D _Texture;
         private readonly IController _controller;
+        private SoundEffect _Jump;
 
+        private void JumpSound()
+        {
+        //    SoundEffect soundEffect;
+        //    soundEffect = _Content.Load<SoundEffect>("Jump1");
+                _Jump.Play();
+        }
         public void DetectMovement()
         {
             int MoveMagnitude = 1;
-            // TODO: Add your update logic here
             if (_controller.DetectRight())
             {
                 AddVeocity(new Vector2(MoveMagnitude, 0));
@@ -41,6 +34,8 @@ namespace FlyingPsychadelia
             }
             if (_controller.DetectUp())
             {
+                if (Velocity.Y == 1)
+                    JumpSound();
                 AddVeocity(new Vector2(0, -MoveMagnitude * 2));
             }
             else if (_controller.DetectDown())
@@ -52,13 +47,12 @@ namespace FlyingPsychadelia
                 AddVeocity(new Vector2(0, -20));
             }
         }
-
-
-        public Player(Texture2D texture, int X, int Y, IController Controller)
+        public Player(ContentManager content, IController Controller)
+            : base(content)
         {
+            _Jump = content.Load<SoundEffect>("Jump1");
             _controller = Controller;
-            _bounds = new Rectangle(X,Y,texture.Width, texture.Height);
-            _Texture = texture;
+            SetTexture("Player.png");
         }
         public void Draw(SpriteBatch spriteBatch)
         {
