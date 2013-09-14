@@ -57,6 +57,7 @@ namespace FlyingPsychadelia.Screens
             List<Player> Players = new List<Player>();
             Players.Add(new Player(_content, new Player1KeyboardController()));
             Players.Add(new Player(_content, new Player2KeyboardController()));
+            Camera.Instance.SetMap(_map, new Vector2(25, 25), ScreenManager.GraphicsDevice.Viewport);
             for (int i = 0; i < Players.Count; i++)
             {
                 Players[i].SetLocation(i * 50, 0);
@@ -124,6 +125,7 @@ namespace FlyingPsychadelia.Screens
 
             if (IsActive)
             {
+                
                 _world.Update();
             }
         }
@@ -158,7 +160,7 @@ namespace FlyingPsychadelia.Screens
             else
             {
                 //foreach (Player player in Players)
-                //{
+ h              //{
                 //    player.DetectMovement();
                 //}               
             }
@@ -180,8 +182,8 @@ namespace FlyingPsychadelia.Screens
 
             _progressionShader.Draw(spriteBatch, _world.Progression / _map.Width);
 
-            Rectangle Camera = new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height);
-            _map.Draw(spriteBatch, Camera);
+            //Rectangle Camera = new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height);
+            _map.Draw(spriteBatch, Camera.Instance.CameraView);
             _world.Draw(spriteBatch);
 
             spriteBatch.End();

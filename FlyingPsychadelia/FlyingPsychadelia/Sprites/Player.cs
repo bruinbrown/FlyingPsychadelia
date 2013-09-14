@@ -23,7 +23,7 @@ namespace FlyingPsychadelia
         }
         public void DetectMovement()
         {
-            int MoveMagnitude = 5;
+            int MoveMagnitude = 1;
             if (_controller.DetectRight())
             {
                 AddVeocity(new Vector2(MoveMagnitude, 0));
