@@ -10,13 +10,29 @@ namespace FlyingPsychadelia
     public class World
     {
         private readonly Player[] _players;
+        private readonly Map _map;
         private List<MapObjectWrapper> _BlockingObjects { get; set; }
-        public World(Player[] player, MapObject[] BlockingObjects)
+        public int Progression { get; set; }
+
+        public World(Player[] player, Map map)
         {
-            _BlockingObjects = BlockingObjects.Select(p => new MapObjectWrapper(p)).ToList();
+            _BlockingObjects = map.ObjectLayers[0].MapObjects.Select(p => new MapObjectWrapper(p)).ToList();
             _players = player;
+            _map = map;
         }
-        public void ResolveCollisions()
+        public void Update()
+        {
+            ResolveCollisions();
+            CalculateMaxProgression();
+        }
+
+        private void CalculateMaxProgression()
+        {
+            var currentProgress = _players.Select(p => p.Bounds.Center.X).Max();
+            Progression = Math.Max(Progression, currentProgress);
+        }
+
+        private void ResolveCollisions()
         {
             List<MapObjectWrapper> _BlockingObjects1 = _BlockingObjects;
             foreach (Player player in _players)
@@ -27,16 +43,16 @@ namespace FlyingPsychadelia
                         FixUpCollision(player, Object);
                 }
             }
-            
+
             foreach (var player in _players)
             {
                 foreach (var player1 in _players.Except(new[] {player}))
                 {
-                    FixUpCollision(player,player1);
+                    FixUpCollision(player, player1);
                 }
             }
-
         }
+
         private void FixUpCollision(ICollidable Object1, ICollidable Object2)
         {
             var Overlap = Rectangle.Intersect(Object1.Bounds, Object2.Bounds);

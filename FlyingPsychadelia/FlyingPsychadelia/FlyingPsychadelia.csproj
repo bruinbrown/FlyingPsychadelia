@@ -43,6 +43,7 @@
     <Compile Include="Player.cs" />
     <Compile Include="Player2KeyboardController.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ProgressionShader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="World.cs" />
   </ItemGroup>

@@ -59,7 +59,7 @@ namespace FlyingPsychadelia
             _player2 = new Player(Content.Load<Texture2D>("Player.png"), 50, 0, new Player2KeyboardController());
             Players.Add(_player);
             Players.Add(_player2);
-            _world = new World(new Player[] { _player, _player2 }, _map.ObjectLayers[0].MapObjects);
+            _world = new World(new Player[] { _player, _player2 }, _map);
             // TODO: use this.Content to load your game content here
         }
 
@@ -94,7 +94,7 @@ namespace FlyingPsychadelia
             }
 
             // Resolve Collisions 
-            _world.ResolveCollisions();
+            _world.Update();
             base.Update(gameTime);
         }
 
@@ -104,15 +104,20 @@ namespace FlyingPsychadelia
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Gray);
 
             spriteBatch.Begin();
 
+            var progressionShader = new ProgressionShader(GraphicsDevice, Color.Red);
+            progressionShader.Draw(spriteBatch, 20);
+            
             _map.Draw(spriteBatch, new Rectangle(0, 0, 320, 320));
             foreach (Player player in Players)
             {
                 player.Draw(spriteBatch);
             }
+
+            
 
             spriteBatch.End();
 
