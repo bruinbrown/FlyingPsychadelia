@@ -61,6 +61,7 @@ namespace FlyingPsychadelia.Screens
             _map = _content.Load<Map>("map2");
             Players.Add(new Player(_content, new Player1KeyboardController()));
             Players.Add(new Player(_content, new Player2KeyboardController()));
+            Camera.Instance.SetMap(_map, new Vector2(25, 25), ScreenManager.GraphicsDevice.Viewport);
             for (int i = 0; i < Players.Count; i++)
             {
                 Players[i].SetLocation(i * 50, 0);
@@ -135,6 +136,8 @@ namespace FlyingPsychadelia.Screens
                     player.DetectMovement();
                     // Move player based on cumulative velocity
                     player.Update(1);  // 1 doesnothing. Fix this for varying framerates.
+
+                    Camera.Instance.SetCamera(new Vector2(player.Bounds.X, player.Bounds.Y));
                 }
                 foreach (BaseEnemy enemy in _enemies)
                 {
@@ -217,8 +220,8 @@ namespace FlyingPsychadelia.Screens
 
             _progressionShader.Draw(spriteBatch, _world.Progression / _map.Width);
 
-            Rectangle Camera = new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height);
-            _map.Draw(spriteBatch, Camera);
+            //Rectangle Camera = new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height);
+            _map.Draw(spriteBatch, Camera.Instance.CameraView);
             foreach (Player player in Players)
             {
                 player.Draw(spriteBatch);
