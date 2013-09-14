@@ -58,35 +58,33 @@ namespace FlyingPsychadelia
             var Overlap = Rectangle.Intersect(Object1.Bounds, Object2.Bounds);
             var dx = Overlap.Width;
             var dy = Overlap.Height;
+            Player player = Object1 as Player;
 
-            if (Math.Abs(dx) > Math.Abs(dy))
+            if (Math.Abs(dx) > Math.Abs(dy) + 0.01f )
             {
                 // Correct Vertical
                 if (Object1.Velocity.Y < 0)
                 {
                     // Adjust down
-                    OffsetPlayerBounds(Object1,
-                   0,
-                   dy);
+                    OffsetPlayerBounds(Object1, 0, dy);
                 }
 
                 if (Object1.Velocity.Y > 0)
                 {
                     // Adjust up
-                    OffsetPlayerBounds(Object1,
-                   0, -dy);
+                    OffsetPlayerBounds(Object1, 0, -dy);
+                    if (player != null)
+                        player._IsLanded = true;
                 }
                 Object1.Velocity = new Vector2(Object1.Velocity.X, 0.0f);
             }
-            else
+            else if (Math.Abs(dy) > Math.Abs(dx) + 0.01f )
             {
                 // Correct Horizontal
                 if (Object1.Velocity.X < 0) // Moving Left
                 {
                     // Adjust Right
-                    OffsetPlayerBounds(Object1,
-
-                   dx, 0);
+                    OffsetPlayerBounds(Object1, dx, 0);
 
                 }
                 if (Object1.Velocity.X > 0)
