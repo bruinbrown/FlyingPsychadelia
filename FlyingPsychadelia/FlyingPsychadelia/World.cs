@@ -21,16 +21,21 @@ namespace FlyingPsychadelia
             List<MapObjectWrapper> _BlockingObjects1 = _BlockingObjects;
             foreach (Player player in _players)
             {
-                var ToCheck = new List<ICollidable>();
-                ToCheck.AddRange(_BlockingObjects1);
-                ToCheck.AddRange(_players);
-                ToCheck.Remove(player);
-                foreach (var Object in ToCheck)
+                foreach (var Object in _BlockingObjects1)
                 {
                     if (player.Bounds.Intersects(Object.Bounds))
                         FixUpCollision(player, Object);
                 }
             }
+            
+            foreach (var player in _players)
+            {
+                foreach (var player1 in _players.Except(new[] {player}))
+                {
+                    FixUpCollision(player,player1);
+                }
+            }
+
         }
         private void FixUpCollision(ICollidable Object1, ICollidable Object2)
         {
