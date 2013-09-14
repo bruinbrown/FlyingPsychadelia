@@ -27,6 +27,7 @@ namespace FlyingPsychadelia.Screens
 
         private World _world;
         private ProgressionShader _progressionShader;
+        private PsychShader _psychShader;
 
         #region Initialization
 
@@ -89,6 +90,7 @@ namespace FlyingPsychadelia.Screens
             ScreenManager.Game.ResetElapsedTime();
 
             _progressionShader = new ProgressionShader(ScreenManager.GraphicsDevice, Color.Red);
+            _psychShader = new PsychShader(ScreenManager.GraphicsDevice);
         }
 
 
@@ -179,6 +181,7 @@ namespace FlyingPsychadelia.Screens
             spriteBatch.Begin();
 
             _progressionShader.Draw(spriteBatch, _world.Progression / _map.Width);
+            _psychShader.Draw(spriteBatch);
 
             Rectangle Camera = new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height);
             _map.Draw(spriteBatch, Camera);
