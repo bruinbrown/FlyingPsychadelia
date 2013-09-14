@@ -1,14 +1,8 @@
-﻿#region Using Statements
-using System;
-using System.Collections.Generic;
+﻿using FlyingPsychadelia.Screens;
+using FlyingPsychadelia.Screens.GameStateManagement;
+using FlyingPsychadelia.StateManager;
 using FuncWorks.XNA.XTiled;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.GamerServices;
-#endregion
 
 namespace FlyingPsychadelia
 {
@@ -17,32 +11,26 @@ namespace FlyingPsychadelia
     /// </summary>
     public class Game1 : Game
     {
-        private Player _player2;
-        private World _world;
-        GraphicsDeviceManager graphics;
-        private List<Player> Players = new List<Player>();
-        SpriteBatch spriteBatch;
-        private Map _map;
-        private Player _player;
+        private readonly GraphicsDeviceManager _graphics;
+        private readonly ScreenManager _screenManager;
 
         public Game1()
-            : base()
         {
-            graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this)
+                {
+                    PreferredBackBufferWidth = 800,
+                    PreferredBackBufferHeight = 600
+                };
+
+            _screenManager = new ScreenManager(this);
+
             Content.RootDirectory = "Content";
-        }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
-        protected override void Initialize()
-        {
-            // TODO: Add your initialization logic here
+            Components.Add(_screenManager);
 
-            base.Initialize();
+            // Activate the first screens.
+            _screenManager.AddScreen(new BackgroundScreen(), null);
+            _screenManager.AddScreen(new MainMenuScreen(), null);
         }
 
         /// <summary>
@@ -52,17 +40,8 @@ namespace FlyingPsychadelia
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
             Map.InitObjectDrawing(GraphicsDevice);
-            _map = Content.Load<Map>("map1");
-            Players.Add(new Player(Content, new Player1KeyboardController()));
-            Players.Add(new Player(Content, new Player2KeyboardController()));
-            for (int i = 0; i < Players.Count; i++)
-            {
-                Players[i].SetLocation(i * 50, 0);
-            }
-            _world = new World(Players.ToArray(), _map.ObjectLayers[0].MapObjects);
-            // TODO: use this.Content to load your game content here
+            Content.Load<object>("gradient");
         }
 
         /// <summary>
@@ -75,48 +54,12 @@ namespace FlyingPsychadelia
         }
 
         /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Update(GameTime gameTime)
-        {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-            foreach (Player player in Players)
-            {
-                // Reset velocity for this frame
-                player.Velocity = new Vector2(0, 0);
-                // Add gravity
-                player.AddVeocity(new Vector2(0, 1));
-                // Add Directional Velocity
-                player.DetectMovement();
-                // Move player based on cumulative velocity
-                player.Update(1);  // 1 doesnothing. Fix this for varying framerates.
-            }
-
-            // Resolve Collisions 
-            _world.ResolveCollisions();
-            base.Update(gameTime);
-        }
-
-        /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            spriteBatch.Begin();
-
-            _map.Draw(spriteBatch, new Rectangle(0, 0, 320, 320));
-            foreach (Player player in Players)
-            {
-                player.Draw(spriteBatch);
-            }
-
-            spriteBatch.End();
+            _graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
             base.Draw(gameTime);
         }
