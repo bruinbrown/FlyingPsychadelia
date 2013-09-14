@@ -110,10 +110,8 @@ namespace FlyingPsychadelia.Screens
             {
                 foreach (Player player in Players)
                 {
-                    // Reset velocity for this frame
-                    player.Velocity = new Vector2(0, 0);
                     // Add gravity
-                    player.AddVeocity(new Vector2(0, 1));
+                    player.AddVeocity(new Vector2(player.Velocity.X*-0.2f, 1));
                     // Add Directional Velocity
                     player.DetectMovement();
                     // Move player based on cumulative velocity

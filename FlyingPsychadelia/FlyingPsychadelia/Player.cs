@@ -14,12 +14,11 @@ namespace FlyingPsychadelia
     {
         private readonly IController _controller;
         private SoundEffect _Jump;
+        public bool _IsLanded;
 
         private void JumpSound()
         {
-        //    SoundEffect soundEffect;
-        //    soundEffect = _Content.Load<SoundEffect>("Jump1");
-                _Jump.Play();
+               _Jump.Play();
         }
         public void DetectMovement()
         {
@@ -34,25 +33,31 @@ namespace FlyingPsychadelia
             }
             if (_controller.DetectUp())
             {
-                if (Velocity.Y == 1)
-                    JumpSound();
                 AddVeocity(new Vector2(0, -MoveMagnitude * 2));
             }
             else if (_controller.DetectDown())
             {
                 AddVeocity(new Vector2(0, MoveMagnitude));
             }
+
             if (_controller.DetectJump())
             {
-                AddVeocity(new Vector2(0, -20));
+                if (_IsLanded)
+                {
+                    AddVeocity(new Vector2(0, -15));
+                    _IsLanded = false;
+                    JumpSound();
+                }
             }
         }
         public Player(ContentManager content, IController Controller)
             : base(content)
         {
             _Jump = content.Load<SoundEffect>("Jump1");
+
             _controller = Controller;
             SetTexture("Player.png");
+            _IsLanded = true;
         }
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -65,6 +70,11 @@ namespace FlyingPsychadelia
         }
         public void AddVeocity(Vector2 vector2)
         {
+            if (!_IsLanded)
+            {
+                // don't allow as much control when you're in the air
+                vector2.X *= 0.2f;
+            }
             Velocity = new Vector2(Velocity.X + vector2.X, Velocity.Y + vector2.Y);
         }
         public bool MovingUp()
