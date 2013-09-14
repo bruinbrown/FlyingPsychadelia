@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using FlyingPsychadelia.StateManager;
+using FuncWorks.XNA.XTiled;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,9 +23,14 @@ namespace FlyingPsychadelia.Screens
         private Vector2 _playerPosition = new Vector2(100, 100);
         private Vector2 _enemyPosition = new Vector2(100, 100);
 
-        private Random random = new Random();
+        private Random _random = new Random();
 
-        private float pauseAlpha;
+        private float _pauseAlpha;
+        private Map _map;
+        private Player _player;
+        private Player _player2;
+        private World _world;
+        private List<Player> Players = new List<Player>();
 
         #region Initialization
 
@@ -44,14 +51,20 @@ namespace FlyingPsychadelia.Screens
         public override void LoadContent()
         {
             if (_content == null)
+            {
                 _content = new ContentManager(ScreenManager.Game.Services, "Content");
+            }
 
             _gameFont = _content.Load<SpriteFont>("gamefont");
 
-            // A real game would probably have more content than this sample, so
-            // it would take longer to load. We simulate that by delaying for a
-            // while, giving you a chance to admire the beautiful loading screen.
-            Thread.Sleep(1000);
+            _map = _content.Load<Map>("map1");
+            Players.Add(new Player(_content, new Player1KeyboardController()));
+            Players.Add(new Player(_content, new Player2KeyboardController()));
+            for (int i = 0; i < Players.Count; i++)
+            {
+                Players[i].SetLocation(i * 50, 0);
+            }
+            _world = new World(Players.ToArray(), _map.ObjectLayers[0].MapObjects);
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
             // timing mechanism that we have just finished a very long frame, and that
@@ -86,27 +99,26 @@ namespace FlyingPsychadelia.Screens
 
             // Gradually fade in or out depending on whether we are covered by the pause screen.
             if (coveredByOtherScreen)
-                pauseAlpha = Math.Min(pauseAlpha + 1f / 32, 1);
+                _pauseAlpha = Math.Min(_pauseAlpha + 1f / 32, 1);
             else
-                pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
+                _pauseAlpha = Math.Max(_pauseAlpha - 1f / 32, 0);
 
             if (IsActive)
             {
-                // Apply some random jitter to make the enemy move around.
-                const float randomization = 10;
+                foreach (Player player in Players)
+                {
+                    // Reset velocity for this frame
+                    player.Velocity = new Vector2(0, 0);
+                    // Add gravity
+                    player.AddVeocity(new Vector2(0, 1));
+                    // Add Directional Velocity
+                    player.DetectMovement();
+                    // Move player based on cumulative velocity
+                    player.Update(1);  // 1 doesnothing. Fix this for varying framerates.
+                }
 
-                _enemyPosition.X += (float)(random.NextDouble() - 0.5) * randomization;
-                _enemyPosition.Y += (float)(random.NextDouble() - 0.5) * randomization;
-
-                // Apply a stabilizing force to stop the enemy moving off the screen.
-                Vector2 targetPosition = new Vector2(
-                    ScreenManager.GraphicsDevice.Viewport.Width / 2 - _gameFont.MeasureString("Insert Gameplay Here").X / 2,
-                    200);
-
-                _enemyPosition = Vector2.Lerp(_enemyPosition, targetPosition, 0.05f);
-
-                // TODO: this game isn't very fun! You could probably improve
-                // it by inserting something more interesting in this space :-)
+                // Resolve Collisions 
+                _world.ResolveCollisions();
             }
         }
 
@@ -176,22 +188,22 @@ namespace FlyingPsychadelia.Screens
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target,
                                                Color.CornflowerBlue, 0, 0);
 
-            // Our player and enemy are both actually just text strings.
-            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
+            var spriteBatch = ScreenManager.SpriteBatch;
 
             spriteBatch.Begin();
 
-            spriteBatch.DrawString(_gameFont, "// TODO", _playerPosition, Color.Green);
-
-            spriteBatch.DrawString(_gameFont, "Insert Gameplay Here",
-                                   _enemyPosition, Color.DarkRed);
+            _map.Draw(spriteBatch, new Rectangle(0, 0, 320, 320));
+            foreach (Player player in Players)
+            {
+                player.Draw(spriteBatch);
+            }
 
             spriteBatch.End();
 
             // If the game is transitioning on or off, fade it out to black.
-            if (TransitionPosition > 0 || pauseAlpha > 0)
+            if (TransitionPosition > 0 || _pauseAlpha > 0)
             {
-                float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, pauseAlpha / 2);
+                float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, _pauseAlpha / 2);
 
                 ScreenManager.FadeBackBufferToBlack(alpha);
             }
