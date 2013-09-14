@@ -39,8 +39,10 @@
     <Compile Include="ICollidable.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="Sprites\BaseEnemy.cs" />
+    <Compile Include="Sprites\HorizontallyOscillatingEnemy.cs" />
     <Compile Include="Sprites\OscillatingEnemy.cs" />
     <Compile Include="Player1KeyboardController.cs" />
+    <Compile Include="Sprites\VerticallyOscillatingEnemy.cs" />
     <Compile Include="Sprites\Player.cs" />
     <Compile Include="Player2KeyboardController.cs" />
     <Compile Include="Sprites\MovableSprite.cs" />
@@ -89,7 +91,13 @@
       <Link>SDL.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\dragon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Jump1.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\leprechaun.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Player.png">

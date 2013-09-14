@@ -52,7 +52,7 @@ namespace FlyingPsychadelia
         {
             _Jump = content.Load<SoundEffect>("Jump1");
             _controller = Controller;
-            SetTexture("Player.png");
+            SetTexture("leprechaun.png");
         }
         public void Draw(SpriteBatch spriteBatch)
         {

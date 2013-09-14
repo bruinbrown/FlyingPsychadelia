@@ -58,7 +58,7 @@ namespace FlyingPsychadelia.Screens
 
             _gameFont = _content.Load<SpriteFont>("gamefont");
 
-            _map = _content.Load<Map>("map1");
+            _map = _content.Load<Map>("map2");
             Players.Add(new Player(_content, new Player1KeyboardController()));
             Players.Add(new Player(_content, new Player2KeyboardController()));
             for (int i = 0; i < Players.Count; i++)
@@ -72,12 +72,18 @@ namespace FlyingPsychadelia.Screens
             //    var y = Random.Next(_map.Height * _map.TileHeight);
             //    _enemies.Add(new StaticEnemy(_content,x,y));
             //}
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 50; i++)
             {
                 var x = Random.Next(_map.Width * _map.TileWidth);
                 var y = Random.Next(_map.Height* _map.TileHeight);
-                _enemies.Add(new OscillatingEnemy(_content, x, y));
+                _enemies.Add(new HorizontallyOscillatingEnemy(_content, x, y, 150));
             }
+            for (int i = 0; i < 50; i++)
+            {
+                var x = Random.Next(_map.Width * _map.TileWidth);
+                var y = Random.Next(_map.Height * _map.TileHeight);
+                _enemies.Add(new VerticallyOscillatingEnemy(_content, x, y, 150));
+            } 
             _world = new World(Players.ToArray(), _map);
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
@@ -211,9 +217,10 @@ namespace FlyingPsychadelia.Screens
 
             spriteBatch.Begin();
 
-            _progressionShader.Draw(spriteBatch, _world.Progression/_map.Width);
+            _progressionShader.Draw(spriteBatch, _world.Progression / _map.Width);
 
-            _map.Draw(spriteBatch, new Rectangle(0, 0, 320, 320));
+            Rectangle Camera = new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height);
+            _map.Draw(spriteBatch, Camera);
             foreach (Player player in Players)
             {
                 player.Draw(spriteBatch);
