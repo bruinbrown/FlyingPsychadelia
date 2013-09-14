@@ -8,29 +8,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FlyingPsychadelia
 {
-    public class Player : ICollidable
+    public class Player : MovableSprite, ICollidable
     {
-        public Rectangle Bounds
-        {
-            get
-            {
-                return _bounds;
-            }
-            set
-            {
-                _bounds = value;
-            }
-        }
-        public Vector2 Velocity{get; set;}
-
-        private Rectangle _bounds;
-        private Texture2D _Texture;
         private readonly IController _controller;
 
         public void DetectMovement()
         {
             int MoveMagnitude = 1;
-            // TODO: Add your update logic here
             if (_controller.DetectRight())
             {
                 AddVeocity(new Vector2(MoveMagnitude, 0));
@@ -54,20 +38,9 @@ namespace FlyingPsychadelia
         }
 
 
-        public Player(Texture2D texture, int X, int Y, IController Controller)
+        public Player(Texture2D texture, int X, int Y, IController Controller):base(texture,X,Y)
         {
             _controller = Controller;
-            _bounds = new Rectangle(X,Y,texture.Width, texture.Height);
-            _Texture = texture;
-        }
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(_Texture,Bounds, Color.White);
-        }
-        public void Update(float gametime)
-        {
-            // Apply current velocity to rectangle X and Y
-            _bounds.Offset((int)Math.Floor(Velocity.X), (int)Math.Floor(Velocity.Y));
         }
         public void AddVeocity(Vector2 vector2)
         {
@@ -80,6 +53,14 @@ namespace FlyingPsychadelia
         public bool MovingRight()
         {
             return Velocity.X > 0;
+            
+        }
+    }
+    public class Enemy
+    {
+        
+        public Enemy()
+        {
             
         }
     }
