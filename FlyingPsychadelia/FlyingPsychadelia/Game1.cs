@@ -20,8 +20,7 @@ namespace FlyingPsychadelia
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         private Map _map;
-        private Rectangle _player;
-
+        private Player _player;
         public Game1()
             : base()
         {
@@ -52,7 +51,8 @@ namespace FlyingPsychadelia
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Map.InitObjectDrawing(GraphicsDevice);
             _map = Content.Load<Map>("map1");
-            _player = _map.SourceTiles[0].Source; ;
+            Texture2D _PlayerTexture = Content.Load<Texture2D>("Player.png");
+            _player = new Player(_PlayerTexture, 0, 0);
             // TODO: use this.Content to load your game content here
         }
 
@@ -78,11 +78,11 @@ namespace FlyingPsychadelia
             // TODO: Add your update logic here
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
-                _player.X += 10;
+                _player.MoveRight();
             }
             else if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-                _player.X -= 10;
+                _player.MoveLeft();
             }
 
             base.Update(gameTime);
@@ -99,11 +99,7 @@ namespace FlyingPsychadelia
             spriteBatch.Begin();
 
             _map.Draw(spriteBatch, new Rectangle(0, 0, 320, 320));
-
-
-            spriteBatch.Draw(_map.Tilesets[_map.SourceTiles[0].TilesetID].Texture,
-                             Map.Translate(_player, new Rectangle(0, 0, 320, 320)),
-                           _map.SourceTiles[0].Source, Color.White);
+            _player.Draw(spriteBatch);
 
             spriteBatch.End();
 
