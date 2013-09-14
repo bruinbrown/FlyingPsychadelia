@@ -28,12 +28,13 @@ namespace FlyingPsychadelia
         private Rectangle _bounds;
         private Texture2D _Texture;
         private readonly IController _controller;
+        private SoundEffect _Jump;
 
         private void JumpSound()
         {
-           // SoundEffect soundEffect;
-         //   soundEffect = Content.Load<SoundEffect>("Jump1");
-       //     soundEffect.Play();
+        //    SoundEffect soundEffect;
+        //    soundEffect = _Content.Load<SoundEffect>("Jump1");
+                _Jump.Play();
         }
 
         public void DetectMovement()
@@ -50,6 +51,8 @@ namespace FlyingPsychadelia
             }
             if (_controller.DetectUp())
             {
+                if (Velocity.Y == 1)
+                    JumpSound();
                 AddVeocity(new Vector2(0, -MoveMagnitude * 2));
             }
             else if (_controller.DetectDown())
@@ -65,6 +68,7 @@ namespace FlyingPsychadelia
 
         public Player(ContentManager content, int X, int Y, IController Controller)
         {
+            _Jump = content.Load<SoundEffect>("Jump1");
             _controller = Controller;
             _Texture = content.Load<Texture2D>("player.png");
            _bounds = new Rectangle(X,Y,_Texture.Width, _Texture.Height);
