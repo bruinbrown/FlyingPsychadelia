@@ -127,18 +127,18 @@ namespace FlyingPsychadelia
         }
         private void FixUpPlayer(Player player, MapObject TheObject)
         {
-            int dy = 0;
-            int dx = 0;
+            int dy = 1000;
+            int dx = 1000;
 
             // Determine if overlap is primarily in X or Y
-            if (player.MovingRight())
+            if (player.Velocity.X > 0)
                 dx = player.Bounds.Right - TheObject.Bounds.Left;
-            else
+            if (player.Velocity.X < 0)
                 dx = player.Bounds.Left - TheObject.Bounds.Right;
 
-            if (player.MovingUp())
+            if (player.Velocity.Y < 0)
                 dy = player.Bounds.Top - TheObject.Bounds.Bottom;
-            else
+            if (player.Velocity.Y > 0)
                 dy = player.Bounds.Bottom - TheObject.Bounds.Top;
 
             if (Math.Abs(dx) > Math.Abs(dy))
@@ -152,7 +152,9 @@ namespace FlyingPsychadelia
                 else
                 {
                     // Adjust up
-                    player.Bounds.Offset(0, dy - 1);
+                    int Mydy = -(dy + 1);
+                    int newVariable = 0;
+                    player.Bounds = new Rectangle(player.Bounds.X + newVariable, player.Bounds.Y + Mydy, player.Bounds.Width, player.Bounds.Height);
                 }
                 player.Velocity.Y = 0.0f;
             }
