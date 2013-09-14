@@ -10,23 +10,8 @@ using Microsoft.Xna.Framework.Content;
 
 namespace FlyingPsychadelia
 {
-    public class Player : ICollidable
+    public class Player : MovableSprite, ICollidable
     {
-        public Rectangle Bounds
-        {
-            get
-            {
-                return _bounds;
-            }
-            set
-            {
-                _bounds = value;
-            }
-        }
-        public Vector2 Velocity{get; set;}
-
-        private Rectangle _bounds;
-        private Texture2D _Texture;
         private readonly IController _controller;
         private SoundEffect _Jump;
 
@@ -36,11 +21,9 @@ namespace FlyingPsychadelia
         //    soundEffect = _Content.Load<SoundEffect>("Jump1");
                 _Jump.Play();
         }
-
         public void DetectMovement()
         {
             int MoveMagnitude = 1;
-            // TODO: Add your update logic here
             if (_controller.DetectRight())
             {
                 AddVeocity(new Vector2(MoveMagnitude, 0));
@@ -64,14 +47,12 @@ namespace FlyingPsychadelia
                 AddVeocity(new Vector2(0, -20));
             }
         }
-
-
-        public Player(ContentManager content, int X, int Y, IController Controller)
+        public Player(ContentManager content, IController Controller)
+            : base(content)
         {
             _Jump = content.Load<SoundEffect>("Jump1");
             _controller = Controller;
-            _Texture = content.Load<Texture2D>("player.png");
-           _bounds = new Rectangle(X,Y,_Texture.Width, _Texture.Height);
+            SetTexture("Player.png");
         }
         public void Draw(SpriteBatch spriteBatch)
         {
