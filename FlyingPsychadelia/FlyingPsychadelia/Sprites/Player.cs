@@ -1,14 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
-using FuncWorks.XNA.XTiled;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 
-namespace FlyingPsychadelia
+namespace FlyingPsychadelia.Sprites
 {
     public class Player : MovableSprite, ICollidable
     {
@@ -16,10 +11,14 @@ namespace FlyingPsychadelia
         private SoundEffect[] _Jump;
         public bool _IsLanded;
         private Random _random;
+        public int Health { get; set; }
+        public const int MaxHealth = 3;
+
         private void JumpSound()
         {
             _Jump[ _random.Next()%3 ].Play();
         }
+
         public void DetectMovement()
         {
             int MoveMagnitude = 1;
@@ -55,7 +54,7 @@ namespace FlyingPsychadelia
                 }
             }
         }
-        public Player(ContentManager content, IController Controller)
+        public Player(ContentManager content, IController controller)
             : base(content)
         {
             _Jump = new SoundEffect[3];
@@ -63,10 +62,11 @@ namespace FlyingPsychadelia
             _Jump[1] = content.Load<SoundEffect>("Jump2");
             _Jump[2] = content.Load<SoundEffect>("Jump3");
 
-            _controller = Controller;
+            _controller = controller;
             SetTexture("leprechaun.png");
             _IsLanded = true;
             _random = new Random();
+            Health = MaxHealth;
         }
         public void AddVeocity(Vector2 vector2)
         {

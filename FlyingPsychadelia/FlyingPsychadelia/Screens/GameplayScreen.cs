@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using FlyingPsychadelia.Screens.Controls;
 using FlyingPsychadelia.StateManager;
 using FuncWorks.XNA.XTiled;
 using Microsoft.Xna.Framework;
@@ -28,6 +29,7 @@ namespace FlyingPsychadelia.Screens
         private World _world;
         private ProgressionShader _progressionShader;
         private PsychShader _psychShader;
+        private GameOverlay _gameOverlay;
 
         #region Initialization
 
@@ -39,6 +41,7 @@ namespace FlyingPsychadelia.Screens
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            _gameOverlay = new GameOverlay();
         }
 
 
@@ -51,12 +54,15 @@ namespace FlyingPsychadelia.Screens
             {
                 _content = new ContentManager(ScreenManager.Game.Services, "Content");
             }
+            _gameOverlay.LoadContent(_content);
 
             _gameFont = _content.Load<SpriteFont>("gamefont");
 
             _map = _content.Load<Map>("map2");
 
             _world = new World(_map, _content);
+            _gameOverlay.SetPlayer(_world.Players[0]);
+
             Camera.Instance.SetMap(_map, _world.Players[0].LocationAsVector(), ScreenManager.GraphicsDevice.Viewport);
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
@@ -163,6 +169,7 @@ namespace FlyingPsychadelia.Screens
             _map.Draw(spriteBatch, Camera.Instance.CameraView);
             _world.Draw(spriteBatch);
 
+            _gameOverlay.Draw(spriteBatch, ScreenManager);
             spriteBatch.End();
 
             // If the game is transitioning on or off, fade it out to black.
