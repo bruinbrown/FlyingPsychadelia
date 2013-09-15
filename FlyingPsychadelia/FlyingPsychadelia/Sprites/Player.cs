@@ -40,6 +40,10 @@ namespace FlyingPsychadelia
             {
                 AddVeocity(new Vector2(0, MoveMagnitude));
             }
+            else if (_controller.DetectFire())
+            {
+                
+            }
 
             if (_controller.DetectJump())
             {

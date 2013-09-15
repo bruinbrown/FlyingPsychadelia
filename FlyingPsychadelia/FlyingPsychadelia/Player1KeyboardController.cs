@@ -13,9 +13,13 @@ namespace FlyingPsychadelia
     public class Player1KeyboardController : IController
     {
 
+        public bool DetectFire()
+        {
+            return Keyboard.GetState().IsKeyDown(Keys.RightControl);
+        }
         public bool DetectJump()
         {
-            return Keyboard.GetState().IsKeyDown(Keys.Space);
+            return Keyboard.GetState().IsKeyDown(Keys.Up);
         }
         public bool DetectRight()
         {

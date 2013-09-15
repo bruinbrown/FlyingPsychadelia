@@ -17,5 +17,6 @@ namespace FlyingPsychadelia
         bool DetectUp();
         bool DetectDown();
         bool DetectJump();
+        bool DetectFire();
     }
 }

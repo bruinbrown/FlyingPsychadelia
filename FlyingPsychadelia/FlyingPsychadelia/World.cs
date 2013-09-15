@@ -4,28 +4,56 @@ using System.Linq;
 using System.Text;
 using FuncWorks.XNA.XTiled;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FlyingPsychadelia
 {
     public class World
     {
-        private readonly Player[] _players;
+        private readonly List<Player> _players;
         private readonly Map _map;
+        private readonly List<BaseEnemy> _enemies;
         private List<MapObjectWrapper> _BlockingObjects { get; set; }
         public int Progression { get; set; }
 
-        public World(Player[] player, Map map)
+        public World(Map map, List<Player> Players, List<BaseEnemy> Enemies)
         {
+            _enemies = Enemies;
             _BlockingObjects = map.ObjectLayers[0].MapObjects.Select(p => new MapObjectWrapper(p)).ToList();
-            _players = player;
+            _players = Players;
             _map = map;
         }
         public void Update()
         {
+            foreach (Player player in _players)
+            {
+                player.Velocity = Vector2.Zero;
+                // Add gravity
+                player.AddVeocity(new Vector2(player.Velocity.X * -0.2f, 1));
+                // Add Directional Velocity
+                player.DetectMovement();
+                // Move player based on cumulative velocity
+                player.Update(1);  // 1 doesnothing. Fix this for varying framerates.
+            }
+            foreach (BaseEnemy enemy in _enemies)
+            {
+                enemy.Update(1);
+            }
             ResolveCollisions();
             CalculateMaxProgression();
         }
 
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            foreach (Player player in _players)
+            {
+                player.Draw(spriteBatch);
+            }
+            foreach (BaseEnemy enemy in _enemies)
+            {
+                enemy.Draw(spriteBatch);
+            }
+        }
         private void CalculateMaxProgression()
         {
             var currentProgress = _players.Select(p => p.Bounds.Center.X).Max();
