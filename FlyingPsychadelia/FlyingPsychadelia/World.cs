@@ -57,6 +57,29 @@ namespace FlyingPsychadelia
                 }
 
             }
+            else
+            {
+                foreach (MapObject mapObject in EnemyObjects)
+                {
+                    var x = mapObject.Bounds.X;
+                    var y = mapObject.Bounds.Y;
+                    string EnemyType = mapObject.Properties["Type"].Value;
+                    switch (EnemyType)
+                    {
+
+                        case "V":
+                            _enemies.Add(new VerticallyOscillatingEnemy(_content, x, y, 150));
+                            break;
+                        case "H":
+                            _enemies.Add(new HorizontallyOscillatingEnemy(_content, x, y, 150));
+                            break;
+                        case "S":
+                        case "":
+                            _enemies.Add(new StaticEnemy(_content, x, y));
+                            break;
+                    }
+                }
+            }
         }
         private IEnumerable<MapObject> GetLayerObjectsOrNull(string LayerName)
         {
