@@ -42,7 +42,7 @@ namespace FlyingPsychadelia
             {
                 Players[0].SetLocation(StartLayer.MapObjects[0].Bounds.X, StartLayer.MapObjects[0].Bounds.Y);
             }
-            var EnemyObjects = GetLayerObjectsOrNull("Enemies");
+            var EnemyObjects = GetLayerObjectsOrNull("EnemyLayer");
             if (EnemyObjects == null)
             {
                 var Random = new System.Random();
@@ -281,7 +281,7 @@ namespace FlyingPsychadelia
             var dy = Overlap.Height;
             Player player = Object1 as Player;
 
-            if (Math.Abs(dx) > Math.Abs(dy) + 0.01f)
+            if (Math.Abs(dx) > Math.Abs(dy))
             {
                 // Correct Vertical
                 if (Object1.Velocity.Y < 0)
@@ -290,7 +290,7 @@ namespace FlyingPsychadelia
                     OffsetPlayerBounds(Object1, 0, dy);
                 }
 
-                if (Object1.Velocity.Y > 0)
+                if (Object1.Velocity.Y >= 0)
                 {
                     // Adjust up
                     OffsetPlayerBounds(Object1, 0, -dy);
@@ -299,7 +299,7 @@ namespace FlyingPsychadelia
                 }
                 Object1.Velocity = new Vector2(Object1.Velocity.X, 0.0f);
             }
-            else if (Math.Abs(dy) > Math.Abs(dx) + 0.01f)
+            else if (Math.Abs(dy) > Math.Abs(dx))
             {
                 // Correct Horizontal
                 if (Object1.Velocity.X < 0) // Moving Left
@@ -308,7 +308,7 @@ namespace FlyingPsychadelia
                     OffsetPlayerBounds(Object1, dx, 0);
 
                 }
-                if (Object1.Velocity.X > 0)
+                if (Object1.Velocity.X >= 0)
                 {
                     // Adjust Left
 
