@@ -57,6 +57,29 @@ namespace FlyingPsychadelia
                 }
 
             }
+            else
+            {
+                foreach (MapObject mapObject in EnemyObjects)
+                {
+                    var x = mapObject.Bounds.X;
+                    var y = mapObject.Bounds.Y;
+                    string EnemyType = mapObject.Properties["Type"].Value;
+                    switch (EnemyType)
+                    {
+
+                        case "V":
+                            _enemies.Add(new VerticallyOscillatingEnemy(_content, x, y, 150));
+                            break;
+                        case "H":
+                            _enemies.Add(new HorizontallyOscillatingEnemy(_content, x, y, 150));
+                            break;
+                        case "S":
+                        case "":
+                            _enemies.Add(new StaticEnemy(_content, x, y));
+                            break;
+                    }
+                }
+            }
         }
         private IEnumerable<MapObject> GetLayerObjectsOrNull(string LayerName)
         {
@@ -120,8 +143,25 @@ namespace FlyingPsychadelia
             {
                 enemy.Update(gameTime);
             }
+            ApplyDeath();
             ResolveCollisions();
             CalculateMaxProgression();
+        }
+
+        private void ApplyDeath()
+        {
+            var deathObjects = LayerObjectsOrNull("DeathLayer", Camera.Instance.CameraView);
+            if (deathObjects == null) return;
+            foreach (var deathObject in deathObjects)
+            {
+                foreach (var player in _players)
+                {
+                    if (player.Bounds.Intersects(deathObject.Bounds))
+                    {
+                        player.Health--;
+                    }
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -183,7 +223,7 @@ namespace FlyingPsychadelia
                     // Adjust up
                     OffsetPlayerBounds(Object1, 0, -dy);
                     if (player != null)
-                        player._IsLanded = true;
+                        player.IsLanded = true;
                 }
                 Object1.Velocity = new Vector2(Object1.Velocity.X, 0.0f);
             }
