@@ -29,20 +29,12 @@ namespace FlyingPsychadelia
         {
             _content = content;
             _enemies = new List<BaseEnemy>();
-            _BlockingObjects = map.ObjectLayers["GroundCollision"].MapObjects.Select(p => new MapObjectWrapper(p)).ToList();
+            _BlockingObjects = TryGetLayer("GroundCollision").MapObjects.Select(p => new MapObjectWrapper(p)).ToList();
             _players = new List<Player>();
             _map = map;
 
             _players.Add(new Player(_content, new Player1KeyboardController()));
-            ObjectLayer StartLayer = null;
-            try
-            {
-                StartLayer = _map.ObjectLayers["Start"];
-            }
-            catch (Exception ex)
-            {
-                
-            }
+            ObjectLayer StartLayer = TryGetLayer("Start");
             if (StartLayer != null)
             {
                 Players[0].SetLocation(StartLayer.MapObjects[0].Bounds.X, StartLayer.MapObjects[0].Bounds.Y);
@@ -61,6 +53,19 @@ namespace FlyingPsychadelia
                 _enemies.Add(new VerticallyOscillatingEnemy(_content, x, y, 150));
             }
 
+        }
+        private ObjectLayer TryGetLayer(string LayerName)
+        {
+            ObjectLayer Layer = null;
+            try
+            {
+                Layer = _map.ObjectLayers[LayerName];
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return Layer;
         }
 
         public void Update()
