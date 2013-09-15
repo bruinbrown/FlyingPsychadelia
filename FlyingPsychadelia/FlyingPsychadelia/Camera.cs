@@ -28,8 +28,8 @@ namespace FlyingPsychadelia
 
 
 
-            _cameraView.X = (int) position.X;
-            _cameraView.Y = (int) position.Y;
+            _cameraView.X = (int) position.X - _cameraView.Width / 2;
+            _cameraView.Y = (int) position.Y - _cameraView.Height / 2;
         }
 
         public void MoveCamera(Vector2 dMove)

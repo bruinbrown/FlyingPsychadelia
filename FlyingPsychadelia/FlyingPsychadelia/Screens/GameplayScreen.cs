@@ -57,11 +57,11 @@ namespace FlyingPsychadelia.Screens
             List<Player> Players = new List<Player>();
             Players.Add(new Player(_content, new Player1KeyboardController()));
             Players.Add(new Player(_content, new Player2KeyboardController()));
-            Camera.Instance.SetMap(_map, new Vector2(25, 25), ScreenManager.GraphicsDevice.Viewport);
             for (int i = 0; i < Players.Count; i++)
             {
-                Players[i].SetLocation(i * 50, 0);
+                Players[i].SetLocation((i+1) * 400, 350);
             }
+            Camera.Instance.SetMap(_map, Players[0].LocationAsVector(), ScreenManager.GraphicsDevice.Viewport);
             List<BaseEnemy> _enemies = new List<BaseEnemy>();
             var Random = new System.Random();
             //for (int i = 0; i < 10; i++)
@@ -125,8 +125,7 @@ namespace FlyingPsychadelia.Screens
 
             if (IsActive)
             {
-                Point point = _world.Players[0].Bounds.Center;
-                Camera.Instance.SetCamera(new Vector2(point.X, point.Y));
+                Camera.Instance.SetCamera(_world.Players[0].LocationAsVector());
                 _world.Update();
             }
         }

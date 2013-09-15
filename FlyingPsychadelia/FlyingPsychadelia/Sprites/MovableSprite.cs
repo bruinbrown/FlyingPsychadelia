@@ -55,6 +55,10 @@ namespace FlyingPsychadelia
             // Apply current velocity to rectangle X and Y
             _bounds.Offset((int)Math.Floor(Velocity.X), (int)Math.Floor(Velocity.Y));
         }
+        public Vector2 LocationAsVector()
+        {
+            return new Vector2(Bounds.X,Bounds.Y);
+        }
 
     }
 }
