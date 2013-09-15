@@ -130,22 +130,6 @@ namespace FlyingPsychadelia.Screens.Controls
                                    origin, scale, SpriteEffects.None, 0);
         }
 
-        /// <summary>
-        /// Queries how much space this menu entry requires.
-        /// </summary>
-        public virtual int GetHeight(MenuScreen screen)
-        {
-            return screen.ScreenManager.Font.LineSpacing;
-        }
-
-        /// <summary>
-        /// Queries how wide the entry is, used for centering on the screen.
-        /// </summary>
-        public virtual int GetWidth(MenuScreen screen)
-        {
-            return (int)screen.ScreenManager.Font.MeasureString(Text).X;
-        }
-
         #endregion
     }
 }

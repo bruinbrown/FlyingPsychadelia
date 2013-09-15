@@ -145,7 +145,7 @@ namespace FlyingPsychadelia
                     // Adjust up
                     OffsetPlayerBounds(Object1, 0, -dy);
                     if (player != null)
-                        player._IsLanded = true;
+                        player.IsLanded = true;
                 }
                 Object1.Velocity = new Vector2(Object1.Velocity.X, 0.0f);
             }

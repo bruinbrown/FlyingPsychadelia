@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FlyingPsychadelia.Extensions;
 using FlyingPsychadelia.Sprites;
 using FlyingPsychadelia.StateManager;
 using Microsoft.Xna.Framework;
@@ -15,6 +16,7 @@ namespace FlyingPsychadelia.Screens.Controls
         private Texture2D _fullHeart;
         private Texture2D _emptyHeart;
         private Player _player;
+        private string _score = "Score:";
 
         public GameOverlay()
         {
@@ -37,8 +39,8 @@ namespace FlyingPsychadelia.Screens.Controls
             SpriteFont font = screenManager.Font;
      
             // Draw Score
-            spriteBatch.DrawString(font, "Score:", new Vector2(0,0), Color.White, 0F, Vector2.Zero, .5F, SpriteEffects.None, 0F);
-
+            spriteBatch.DrawString(font, _score, new Vector2(5, 0), Color.DarkGreen, 0F, Vector2.Zero, .6F, SpriteEffects.None, 0F);
+            spriteBatch.DrawString(font, _player.Score.ToString("D8"), new Vector2(font.GetWidth(_player.Score.ToString()) + 50, 0), Color.DarkGreen, 0F, Vector2.Zero, .6F, SpriteEffects.None, 0F);
 
             int offsetX = 30;
             for (int i = Player.MaxHealth; i >= 1; i--)

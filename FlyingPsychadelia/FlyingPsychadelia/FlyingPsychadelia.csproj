@@ -68,6 +68,7 @@
     <Compile Include="StateManager\GameStateManagement.cs" />
     <Compile Include="StateManager\InputState.cs" />
     <Compile Include="StateManager\ScreenManager.cs" />
+    <Compile Include="Extensions\FontExtenstions.cs" />
     <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>
