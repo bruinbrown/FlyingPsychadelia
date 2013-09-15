@@ -16,7 +16,6 @@ namespace FlyingPsychadelia
         private SoundEffect[] _Jump;
         public bool _IsLanded;
         private Random _random;
-
         private void JumpSound()
         {
             _Jump[ _random.Next()%3 ].Play();
@@ -39,6 +38,10 @@ namespace FlyingPsychadelia
             else if (_controller.DetectDown())
             {
                 AddVeocity(new Vector2(0, MoveMagnitude));
+            }
+            else if (_controller.DetectFire())
+            {
+                
             }
 
             if (_controller.DetectJump())
@@ -64,15 +67,6 @@ namespace FlyingPsychadelia
             SetTexture("leprechaun.png");
             _IsLanded = true;
             _random = new Random();
-        }
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(_Texture,Bounds, Color.White);
-        }
-        public void Update(float gametime)
-        {
-            // Apply current velocity to rectangle X and Y
-            _bounds.Offset((int)Math.Floor(Velocity.X), (int)Math.Floor(Velocity.Y));
         }
         public void AddVeocity(Vector2 vector2)
         {

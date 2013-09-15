@@ -18,11 +18,7 @@ namespace FlyingPsychadelia.Screens
     public class GameplayScreen : GameScreen
     {
         private ContentManager _content;
-        private IList<BaseEnemy> _enemies = new List<BaseEnemy>();
         private SpriteFont _gameFont;
-
-        private Vector2 _playerPosition = new Vector2(100, 100);
-        private Vector2 _enemyPosition = new Vector2(100, 100);
 
         private Random _random = new Random();
 
@@ -30,7 +26,6 @@ namespace FlyingPsychadelia.Screens
         private Map _map;
 
         private World _world;
-        private List<Player> Players = new List<Player>();
         private ProgressionShader _progressionShader;
 
         #region Initialization
@@ -59,13 +54,15 @@ namespace FlyingPsychadelia.Screens
             _gameFont = _content.Load<SpriteFont>("gamefont");
 
             _map = _content.Load<Map>("map2");
+            List<Player> Players = new List<Player>();
             Players.Add(new Player(_content, new Player1KeyboardController()));
             Players.Add(new Player(_content, new Player2KeyboardController()));
-            Camera.Instance.SetMap(_map, new Vector2(25, 25), ScreenManager.GraphicsDevice.Viewport);
             for (int i = 0; i < Players.Count; i++)
             {
-                Players[i].SetLocation(i * 50, 0);
+                Players[i].SetLocation((i+1) * 400, 350);
             }
+            Camera.Instance.SetMap(_map, Players[0].LocationAsVector(), ScreenManager.GraphicsDevice.Viewport);
+            List<BaseEnemy> _enemies = new List<BaseEnemy>();
             var Random = new System.Random();
             //for (int i = 0; i < 10; i++)
             //{
@@ -76,7 +73,7 @@ namespace FlyingPsychadelia.Screens
             for (int i = 0; i < 50; i++)
             {
                 var x = Random.Next(_map.Width * _map.TileWidth);
-                var y = Random.Next(_map.Height* _map.TileHeight);
+                var y = Random.Next(_map.Height * _map.TileHeight);
                 _enemies.Add(new HorizontallyOscillatingEnemy(_content, x, y, 150));
             }
             for (int i = 0; i < 50; i++)
@@ -84,8 +81,8 @@ namespace FlyingPsychadelia.Screens
                 var x = Random.Next(_map.Width * _map.TileWidth);
                 var y = Random.Next(_map.Height * _map.TileHeight);
                 _enemies.Add(new VerticallyOscillatingEnemy(_content, x, y, 150));
-            } 
-            _world = new World(Players.ToArray(), _map);
+            }
+            _world = new World(_map, Players, _enemies);
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
             // timing mechanism that we have just finished a very long frame, and that
@@ -128,22 +125,7 @@ namespace FlyingPsychadelia.Screens
 
             if (IsActive)
             {
-                foreach (Player player in Players)
-                {
-                    // Add gravity
-                    player.AddVeocity(new Vector2(player.Velocity.X*-0.2f, 1));
-                    // Add Directional Velocity
-                    player.DetectMovement();
-                    // Move player based on cumulative velocity
-                    player.Update(1);  // 1 doesnothing. Fix this for varying framerates.
-
-                    Camera.Instance.SetCamera(new Vector2(player.Bounds.X, player.Bounds.Y));
-                }
-                foreach (BaseEnemy enemy in _enemies)
-                {
-                    enemy.Update(1);
-                }
-                // Resolve Collisions 
+                Camera.Instance.SetCamera(_world.Players[0].LocationAsVector());
                 _world.Update();
             }
         }
@@ -177,30 +159,10 @@ namespace FlyingPsychadelia.Screens
             }
             else
             {
-                // Otherwise move the player position.
-                Vector2 movement = Vector2.Zero;
-
-                if (keyboardState.IsKeyDown(Keys.Left))
-                    movement.X--;
-
-                if (keyboardState.IsKeyDown(Keys.Right))
-                    movement.X++;
-
-                if (keyboardState.IsKeyDown(Keys.Up))
-                    movement.Y--;
-
-                if (keyboardState.IsKeyDown(Keys.Down))
-                    movement.Y++;
-
-                Vector2 thumbstick = gamePadState.ThumbSticks.Left;
-
-                movement.X += thumbstick.X;
-                movement.Y -= thumbstick.Y;
-
-                if (movement.Length() > 1)
-                    movement.Normalize();
-
-                _playerPosition += movement * 2;
+                //foreach (Player player in Players)
+                //{
+                //    player.DetectMovement();
+                //}               
             }
         }
 
@@ -222,14 +184,7 @@ namespace FlyingPsychadelia.Screens
 
             //Rectangle Camera = new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height);
             _map.Draw(spriteBatch, Camera.Instance.CameraView);
-            foreach (Player player in Players)
-            {
-                player.Draw(spriteBatch);
-            }
-            foreach (BaseEnemy enemy in _enemies)
-            {
-                enemy.Draw(spriteBatch);
-            }
+            _world.Draw(spriteBatch);
 
             spriteBatch.End();
 
