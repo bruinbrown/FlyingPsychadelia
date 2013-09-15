@@ -2,11 +2,13 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
+using System.Collections.Generic;
 
 namespace FlyingPsychadelia.Sprites
 {
     public class Player : MovableSprite
     {
+        public List<Charm> Charms = new List<Charm>();
         public enum PlayerStates
         {
             Alive,
@@ -16,6 +18,7 @@ namespace FlyingPsychadelia.Sprites
 
         public PlayerStates PlayerState;
         private readonly IController _controller;
+        private Direction _Direction = Direction.Right;
         private readonly SoundEffect[] _jump;
         public bool IsLanded;
         private readonly Random _random;
@@ -51,10 +54,12 @@ namespace FlyingPsychadelia.Sprites
             if (_controller.DetectRight())
             {
                 AddVeocity(new Vector2(moveMagnitudeX, 0));
+                _Direction = Direction.Right;
             }
             else if (_controller.DetectLeft())
             {
                 AddVeocity(new Vector2(-moveMagnitudeX, 0));
+                _Direction = Direction.Left;
             }
             else if (_controller.DetectDown())
             {
@@ -62,7 +67,12 @@ namespace FlyingPsychadelia.Sprites
             }
             else if (_controller.DetectFire())
             {
-
+                // Spawn new Charm
+                var speed = 0.1f * gameTime.ElapsedGameTime.Milliseconds;
+                var DirectionVector = _Direction == Direction.Left ? new Vector2(-speed,0): new Vector2(speed,0);
+                var SpawnX = _Direction == Direction.Left ?Bounds.X - 1:Bounds.Right +1;
+                var SpawnY = Bounds.Y + (Bounds.Height/2);
+                Charms.Add(new Charm(_Content,SpawnX,SpawnY,DirectionVector));
             }
 
             if (_controller.DetectJump())
@@ -75,7 +85,6 @@ namespace FlyingPsychadelia.Sprites
                     JumpSound();
                 }
             }
-            //
             if (Math.Abs(Velocity.X) < moveMagnitude * 0.2f)
                 AddVeocity(new Vector2(-Velocity.X, 0));
         }
@@ -102,10 +111,6 @@ namespace FlyingPsychadelia.Sprites
             if (Velocity.X < 0)
                 _Reversed = true;
             base.Draw(spriteBatch);
-        }
-        public void AddVeocity(Vector2 vector2)
-        {
-            Velocity = new Vector2(Velocity.X + vector2.X, Velocity.Y + vector2.Y);
         }
         public bool MovingUp()
         {
