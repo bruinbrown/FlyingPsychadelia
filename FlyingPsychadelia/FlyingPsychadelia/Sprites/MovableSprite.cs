@@ -34,6 +34,7 @@ namespace FlyingPsychadelia
         protected void SetTexture(string TextureName)
         {
             _Texture = _Content.Load<Texture2D>(TextureName);
+            SetLocation(10,10);
         }
         public void SetLocation(int X, int Y)
         {
