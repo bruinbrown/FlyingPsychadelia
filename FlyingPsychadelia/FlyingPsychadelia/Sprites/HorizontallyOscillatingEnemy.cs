@@ -17,7 +17,7 @@ namespace FlyingPsychadelia
                 Velocity *= -1;
         }
 
-        public override void Update(float gametime)
+        public override void Update(GameTime gametime)
         {
             if (Bounds.X < _StartX - (_OscillationMax / 2) || Bounds.X > _StartX + (_OscillationMax / 2))
                 Velocity *= -1;
@@ -29,7 +29,7 @@ namespace FlyingPsychadelia
             if (Velocity.X < 0)
                 base.Draw(spriteBatch);
             else
-                spriteBatch.Draw(_Texture, Bounds, null, Color.White, 0.0f, new Vector2(), SpriteEffects.FlipHorizontally, 0);
+                spriteBatch.Draw(_Texture, GetBoundsAdjustedForCamera(Bounds), null, Color.White, 0.0f, new Vector2(), SpriteEffects.FlipHorizontally, 0);
         }
 
     }
