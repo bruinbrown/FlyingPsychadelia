@@ -13,6 +13,7 @@ namespace FlyingPsychadelia.Sprites
         private readonly IController _controller;
         private Direction _Direction = Direction.Right;
         private readonly SoundEffect[] _jump;
+        private readonly SoundEffect[] _shootSound;
         public bool IsLanded;
         private readonly Random _random;
         private int _health;
@@ -41,6 +42,11 @@ namespace FlyingPsychadelia.Sprites
         private void JumpSound()
         {
             _jump[_random.Next() % 3].Play();
+        }
+
+        private void ShootSound()
+        {
+            _shootSound[_random.Next() % 3].Play();
         }
 
         public void DetectMovement(GameTime gameTime)
@@ -74,6 +80,7 @@ namespace FlyingPsychadelia.Sprites
                 if (Charms.Count < 5 && _timeUntilCanShoot <= 0 )
                 {
                     Charms.Add(new Charm(_Content, SpawnX, SpawnY, DirectionVector));
+                    ShootSound();
                     _timeUntilCanShoot = 180;
                 }
             }
@@ -98,6 +105,11 @@ namespace FlyingPsychadelia.Sprites
             _jump[0] = content.Load<SoundEffect>("Jump1");
             _jump[1] = content.Load<SoundEffect>("Jump2");
             _jump[2] = content.Load<SoundEffect>("Jump3");
+
+            _shootSound = new SoundEffect[3];
+            _shootSound[0] = content.Load<SoundEffect>("Gold1");
+            _shootSound[1] = content.Load<SoundEffect>("Gold2");
+            _shootSound[2] = content.Load<SoundEffect>("Gold3");
 
             _controller = controller;
             SetTexture("leprechaunanimation.png", 32, 32);

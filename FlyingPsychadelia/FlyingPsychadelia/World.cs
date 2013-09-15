@@ -7,6 +7,7 @@ using FuncWorks.XNA.XTiled;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
 
 namespace FlyingPsychadelia
 {
@@ -20,6 +21,8 @@ namespace FlyingPsychadelia
         public int Progression { get; set; }
         public int Time { get; set; }
         private const int MaxTime = 500;
+        private readonly SoundEffect _explodeSound;
+        private readonly SoundEffect _hitSound;
 
         public List<Player> Players
         {
@@ -36,6 +39,8 @@ namespace FlyingPsychadelia
             _players = new List<Player>();
             _players.Add(new Player(_content, new Player1KeyboardController()));
             Time = 500;
+
+            _explodeSound = content.Load<SoundEffect>("Explosion");
 
             ObjectLayer StartLayer = GetLayerOrNull("StartLayer");
             if (StartLayer != null)
@@ -169,6 +174,7 @@ namespace FlyingPsychadelia
                     {
                         player.PlayHasBeenHurt(gameTime);
                         _enemies.Remove(enemy);
+                        _explodeSound.Play();
                     }
                 }
 
@@ -191,6 +197,7 @@ namespace FlyingPsychadelia
                         {
                             // do enemy interaction
                             _enemies.Remove(enemy);
+                            _explodeSound.Play();
                             player.Score += 100;
                         }
                     }
