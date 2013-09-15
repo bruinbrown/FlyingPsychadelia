@@ -29,9 +29,9 @@ namespace FlyingPsychadelia
         {
             _content = content;
             _enemies = new List<BaseEnemy>();
+            _map = map;
             _BlockingObjects = GetLayerOrNull("GroundCollision").MapObjects.Select(p => new MapObjectWrapper(p)).ToList();
             _players = new List<Player>();
-            _map = map;
             _players.Add(new Player(_content, new Player1KeyboardController()));
             ObjectLayer StartLayer = GetLayerOrNull("StartLayer");
             if (StartLayer != null)
