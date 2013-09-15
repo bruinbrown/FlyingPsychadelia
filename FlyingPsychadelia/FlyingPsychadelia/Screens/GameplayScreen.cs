@@ -163,7 +163,7 @@ namespace FlyingPsychadelia.Screens
             spriteBatch.Begin();
 
             _progressionShader.Draw(spriteBatch, _world.Progression, _map);
-            if( ! _world.Players[0]._IsLanded )
+            if( ! _world.Players[0].IsLanded )
                 _psychShader.Draw(spriteBatch);
 
             //Rectangle Camera = new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height);
