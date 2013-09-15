@@ -41,12 +41,23 @@ namespace FlyingPsychadelia
         }
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_Texture, Bounds, Color.White);
+            spriteBatch.Draw(_Texture, GetBoundsAdjustedForCamera(Bounds), Color.White);
+        }
+        protected Rectangle GetBoundsAdjustedForCamera(Rectangle bounds)
+        {
+            Rectangle ViewRect = Camera.Instance.CameraView;
+            var Temp = bounds;
+            Temp.Offset(-ViewRect.X, -ViewRect.Y);
+            return Temp;
         }
         public virtual void Update(float gametime)
         {
             // Apply current velocity to rectangle X and Y
             _bounds.Offset((int)Math.Floor(Velocity.X), (int)Math.Floor(Velocity.Y));
+        }
+        public Vector2 LocationAsVector()
+        {
+            return new Vector2(Bounds.X,Bounds.Y);
         }
 
     }
