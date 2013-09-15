@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
+using Microsoft.Xna.Framework.Media;
 
 #endregion
 
@@ -38,6 +39,7 @@ namespace FlyingPsychadelia.StateManager
         private Texture2D _blankTexture;
         private bool _isInitialized;
         private bool _traceEnabled;
+        private Song _song;
 
         #endregion
 
@@ -115,6 +117,8 @@ namespace FlyingPsychadelia.StateManager
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _font = content.Load<SpriteFont>("menufont");
             _blankTexture = content.Load<Texture2D>("blank");
+            _song = content.Load<Song>("music.wav");
+            MediaPlayer.Play(_song);
 
             // Tell each of the screens to load their content.
             foreach (GameScreen screen in _screens)
