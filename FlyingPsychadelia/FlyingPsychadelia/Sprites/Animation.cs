@@ -34,38 +34,9 @@ namespace FlyingPsychadelia.Sprites
             set { _texture = value; }
         }
 
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
-
-        public string NextAnimation
-        {
-            get { return _nextAnimation; }
-            set { _nextAnimation = value; }
-        }
-
-        public bool LoopAnimation
-        {
-            get { return _loopAnimation; }
-            set { _loopAnimation = value; }
-        }
-        public bool FinishedPlaying
-        {
-            get { return _finishedPlaying; }
-            set { _finishedPlaying = value; }
-        }
-
         public int FrameCount
         {
-            get { return FramesPerRow*FramesPerCol; }
-        }
-
-        public float FrameLength 
-        {
-            get { return _frameDelay; }
-            set { _frameDelay = value; }
+            get { return _frameCount; }
         }
 
         public Rectangle FrameRectangle
@@ -73,48 +44,19 @@ namespace FlyingPsychadelia.Sprites
             get
             {
                return new Rectangle(
-                   FrameX,FrameY,FrameWidth,FrameHeight
+                   _currentFrame * FrameWidth,0,FrameWidth,FrameHeight
                    ); 
             }
-        }
-
-        private int FrameY
-        {
-            get
-            {
-                return (_currentFrame/FramesPerRow) * _frameHeight;
-            }
-        }
-
-        private int FrameX
-        {
-            get
-            {
-                return (_currentFrame % 3) * _frameWidth;
-            }
-        }
-
-        private int FramesPerRow
-        {
-            get { return _texture.Width/_frameWidth; }
-        }
-
-        private int FramesPerCol {
-            get { return _texture.Height/_frameHeight; }
         }
 
         public Animation(Texture2D texture, int frameWidth, int frameHeight, string name)
         {
             _texture = texture;
             _frameWidth = frameWidth;
+            _frameCount = texture.Width/frameWidth;
             _frameHeight = frameHeight;
             _name = name;
-        }
-
-        public void Play()
-        {
-            _currentFrame = 0;
-            _finishedPlaying = false;
+            _frameDelay = 0.1f;
         }
 
         public void Update(GameTime gameTime)
@@ -127,17 +69,19 @@ namespace FlyingPsychadelia.Sprites
             _currentFrame++;
             if (_currentFrame >= FrameCount)
             {
-                if (_loopAnimation)
-                {
-                    _currentFrame = 0;
-                }
-                else
-                {
-                    _currentFrame = FrameCount - 1;
-                    _finishedPlaying = true;
-                }
+                _currentFrame = 0;
             }
             _frameTimer = 0f;
         }
+
+        public void Draw(SpriteBatch spriteBatch, Rectangle rectangle, bool _Reversed)
+        {
+            SpriteEffects fx = SpriteEffects.None;
+            if(_Reversed)
+                fx = SpriteEffects.FlipHorizontally;
+            spriteBatch.Draw(_texture, rectangle, FrameRectangle, Color.White, 0f, Vector2.Zero, fx, 1.0f );
+        }
+
+        public int _frameCount { get; set; }
     }
 }

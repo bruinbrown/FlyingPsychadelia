@@ -30,8 +30,7 @@ namespace FlyingPsychadelia
             Components.Add(_screenManager);
 
             // Activate the first screens.
-            _screenManager.AddScreen(new BackgroundScreen(), null);
-            _screenManager.AddScreen(new MainMenuScreen(), null);
+            _screenManager.AddScreen(new WarningScreen(), null);
         }
 
         /// <summary>

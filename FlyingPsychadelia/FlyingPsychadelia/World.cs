@@ -16,7 +16,6 @@ namespace FlyingPsychadelia
         private readonly Map _map;
         private readonly List<BaseEnemy> _enemies;
         private readonly ContentManager _content;
-        private List<MapObjectWrapper> _BlockingObjects { get; set; }
         public int Progression { get; set; }
         public int Time { get; set; }
         private const int MaxTime = 500;
@@ -33,7 +32,6 @@ namespace FlyingPsychadelia
             _content = content;
             _enemies = new List<BaseEnemy>();
             _map = map;
-            _BlockingObjects = GetLayerOrNull("GroundCollision").MapObjects.Select(p => new MapObjectWrapper(p)).ToList();
             _players = new List<Player>();
             _players.Add(new Player(_content, new Player1KeyboardController()));
             Time = 500;
@@ -149,8 +147,26 @@ namespace FlyingPsychadelia
                 enemy.Update(gameTime);
             }
             ApplyDeath();
-            ResolveCollisions();
+            ResolveStaticCollisions();
+            ResolveEnemyCollisions();
             CalculateMaxProgression();
+        }
+
+        private void ResolveEnemyCollisions()
+        {
+            var enemys = _enemies.Where(p => p.Bounds.Intersects(Camera.Instance.CameraView));
+
+            foreach (var enemy in enemys)
+            {
+                foreach (var player in _players)
+                {
+                    if (enemy.Bounds.Intersects(player.Bounds))
+                    {
+                        // do enemy interaction
+                    }
+                }
+                
+            }
         }
 
         private void ApplyDeath()
@@ -186,12 +202,12 @@ namespace FlyingPsychadelia
             Progression = Math.Max(Progression, currentProgress);
         }
 
-        private void ResolveCollisions()
+        private void ResolveStaticCollisions()
         {
-            List<MapObjectWrapper> _BlockingObjects1 = _BlockingObjects;
+            var blockingObjects = LayerObjectsOrNull("GroundCollision", Camera.Instance.CameraView).Select(p=>new MapObjectWrapper(p)).ToArray();
             foreach (Player player in Players)
             {
-                foreach (var Object in _BlockingObjects1)
+                foreach (var Object in blockingObjects)
                 {
                     if (player.Bounds.Intersects(Object.Bounds))
                         FixUpCollision(player, Object);

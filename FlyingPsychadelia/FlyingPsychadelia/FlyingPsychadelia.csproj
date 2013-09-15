@@ -40,10 +40,12 @@
     <Compile Include="ICollidable.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="PsychShader.cs" />
+    <Compile Include="Screens\WarningScreen.cs" />
     <Compile Include="Sprites\Animation.cs" />
     <Compile Include="Screens\Controls\GameOverlay.cs" />
     <Compile Include="Sprites\BaseEnemy.cs" />
     <Compile Include="Sprites\Charm.cs" />
+    <Compile Include="Sprites\Direction.cs" />
     <Compile Include="Sprites\HorizontallyOscillatingEnemy.cs" />
     <Compile Include="Sprites\OscillatingEnemy.cs" />
     <Compile Include="Player1KeyboardController.cs" />

@@ -6,15 +6,36 @@ using System.Collections.Generic;
 
 namespace FlyingPsychadelia.Sprites
 {
-    public class Player : MovableSprite, ICollidable
+    public class Player : MovableSprite
     {
         public List<Charm> Charms = new List<Charm>();
+        public enum PlayerStates
+        {
+            Alive,
+            Dead,
+            Invincible
+        }
+
+        public PlayerStates PlayerState;
         private readonly IController _controller;
         private Direction _Direction = Direction.Right;
         private readonly SoundEffect[] _jump;
         public bool IsLanded;
         private readonly Random _random;
-        public int Health { get; set; }
+        private int _health;
+        public int Health
+        {
+            get { return _health; }
+            set
+            {
+                _health = value;
+                if (Health <= 0)
+                {
+                    PlayerState = PlayerStates.Dead;
+                }
+            }
+        }
+
         public int Score { get; set; }
 
         public const int MaxHealth = 3;
@@ -76,18 +97,20 @@ namespace FlyingPsychadelia.Sprites
             _jump[2] = content.Load<SoundEffect>("Jump3");
 
             _controller = controller;
-            SetTexture("leprechaun.png");
+            SetTexture("leprechaunanimation.png");
             IsLanded = true;
             _random = new Random();
+            PlayerState = PlayerStates.Alive;
             Health = MaxHealth;
             Score = 0;
         }
         public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
         {
+            if (Velocity.X > 0)
+                _Reversed = false;
             if (Velocity.X < 0)
-                DrawReversed(spriteBatch);
-            else
-                base.Draw(spriteBatch);
+                _Reversed = true;
+            base.Draw(spriteBatch);
         }
         public bool MovingUp()
         {
