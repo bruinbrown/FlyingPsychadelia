@@ -11,7 +11,7 @@ namespace FlyingPsychadelia
     public class MovableSprite
     {
         protected Rectangle _bounds;
-        private ContentManager _Content;
+        protected ContentManager _Content;
         protected Texture2D _Texture;
         public Rectangle Bounds
         {
@@ -70,6 +70,10 @@ namespace FlyingPsychadelia
                              new Vector2(),
                              SpriteEffects.FlipHorizontally,
                              0);
+        }
+        public void AddVeocity(Vector2 vector2)
+        {
+            Velocity = new Vector2(Velocity.X + vector2.X, Velocity.Y + vector2.Y);
         }
 
     }
