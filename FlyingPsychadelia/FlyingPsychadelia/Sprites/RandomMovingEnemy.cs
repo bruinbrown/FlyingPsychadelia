@@ -16,7 +16,7 @@ namespace FlyingPsychadelia
             SetLocation(x, y);
         }
 
-        public override void Update(float gametime)
+        public override void Update(GameTime gametime)
         {
             this.Velocity = new Vector2(Random.Next(-3, 4), Random.Next(-3, 4));
             base.Update(gametime);

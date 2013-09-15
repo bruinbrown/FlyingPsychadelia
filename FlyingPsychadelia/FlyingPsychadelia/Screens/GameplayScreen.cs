@@ -101,8 +101,8 @@ namespace FlyingPsychadelia.Screens
 
             if (IsActive)
             {
+                _world.Update(gameTime);
                 Camera.Instance.SetCamera(_world.Players[0].LocationAsVector());
-                _world.Update();
             }
         }
 
