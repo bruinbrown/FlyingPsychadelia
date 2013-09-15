@@ -12,9 +12,8 @@ namespace FlyingPsychadelia
     public class MovableSprite : ICollidable
     {
         protected Rectangle _bounds;
-        private ContentManager _Content;
-        //protected Texture2D _Texture;
-
+        protected ContentManager _Content;
+        
         protected Animation _Animation;
 
         protected bool _Reversed;
@@ -67,8 +66,12 @@ namespace FlyingPsychadelia
         }
         public Vector2 LocationAsVector()
         {
+                
             return new Vector2(Bounds.X,Bounds.Y);
         }
-
+        public void AddVeocity(Vector2 vector2)
+        {
+            Velocity = new Vector2(Velocity.X + vector2.X, Velocity.Y + vector2.Y);
+        }
     }
 }
