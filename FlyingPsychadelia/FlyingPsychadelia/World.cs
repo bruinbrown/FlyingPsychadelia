@@ -29,32 +29,65 @@ namespace FlyingPsychadelia
         {
             _content = content;
             _enemies = new List<BaseEnemy>();
-            _BlockingObjects = TryGetLayer("GroundCollision").MapObjects.Select(p => new MapObjectWrapper(p)).ToList();
+            _BlockingObjects = GetLayerOrNull("GroundCollision").MapObjects.Select(p => new MapObjectWrapper(p)).ToList();
             _players = new List<Player>();
             _map = map;
-
             _players.Add(new Player(_content, new Player1KeyboardController()));
-            ObjectLayer StartLayer = TryGetLayer("Start");
+            ObjectLayer StartLayer = GetLayerOrNull("StartLayer");
             if (StartLayer != null)
             {
                 Players[0].SetLocation(StartLayer.MapObjects[0].Bounds.X, StartLayer.MapObjects[0].Bounds.Y);
             }
-            var Random = new System.Random();
-            for (int i = 0; i < 50; i++)
+            var EnemyObjects = GetLayerObjectsOrNull("Enemies");
+            if (EnemyObjects == null)
             {
-                var x = Random.Next(_map.Width * _map.TileWidth);
-                var y = Random.Next(_map.Height * _map.TileHeight);
-                _enemies.Add(new HorizontallyOscillatingEnemy(_content, x, y, 150));
-            }
-            for (int i = 0; i < 50; i++)
-            {
-                var x = Random.Next(_map.Width * _map.TileWidth);
-                var y = Random.Next(_map.Height * _map.TileHeight);
-                _enemies.Add(new VerticallyOscillatingEnemy(_content, x, y, 150));
-            }
+                var Random = new System.Random();
+                for (int i = 0; i < 50; i++)
+                {
+                    var x = Random.Next(_map.Width * _map.TileWidth);
+                    var y = Random.Next(_map.Height * _map.TileHeight);
+                    _enemies.Add(new HorizontallyOscillatingEnemy(_content, x, y, 150));
+                }
+                for (int i = 0; i < 50; i++)
+                {
+                    var x = Random.Next(_map.Width * _map.TileWidth);
+                    var y = Random.Next(_map.Height * _map.TileHeight);
+                    _enemies.Add(new VerticallyOscillatingEnemy(_content, x, y, 150));
+                }
 
+            }
         }
-        private ObjectLayer TryGetLayer(string LayerName)
+        private IEnumerable<MapObject> GetLayerObjectsOrNull(string LayerName)
+        {
+            IEnumerable<MapObject> Objects = null;
+            try
+            {
+                ObjectLayer Layer = _map.ObjectLayers[LayerName];
+                int index = _map.ObjectLayers.IndexOf(Layer);
+                Objects = _map.ObjectLayers[LayerName].MapObjects;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return Objects;
+        }
+        private IEnumerable<MapObject> LayerObjectsOrNull(string LayerName, Rectangle Region)
+        {
+            IEnumerable<MapObject> Objects = null;
+            try
+            {
+                ObjectLayer Layer = _map.ObjectLayers[LayerName];
+                int index = _map.ObjectLayers.IndexOf(Layer);
+                Objects = _map.GetObjectsInRegion(index, Region);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return Objects;
+        }
+        private ObjectLayer GetLayerOrNull(string LayerName)
         {
             ObjectLayer Layer = null;
             try
