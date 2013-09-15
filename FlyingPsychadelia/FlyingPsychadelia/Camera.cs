@@ -26,10 +26,20 @@ namespace FlyingPsychadelia
         {
             CheckMapHasBeenSet();
 
+            var newX = (int) position.X - _cameraView.Width/2;
+            var newY = (int) position.Y - _cameraView.Height/2;
 
+            if (newX < 0)
+                newX = 0;
+            if (newY < 0)
+                newY = 0;
+            if ((newX + _cameraView.Width) > (_map.Width*_map.TileWidth))
+                newX = (_map.Width*_map.TileWidth) - _cameraView.Width;
+            if ((newY + _cameraView.Height) > (_map.Height*_map.TileHeight))
+                newY = (_map.Height*_map.TileHeight) - _cameraView.Height;
 
-            _cameraView.X = (int) position.X;
-            _cameraView.Y = (int) position.Y;
+            _cameraView.X = newX;
+            _cameraView.Y = newY;
         }
 
         public void MoveCamera(Vector2 dMove)
