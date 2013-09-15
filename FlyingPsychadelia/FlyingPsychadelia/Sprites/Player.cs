@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace FlyingPsychadelia.Sprites
 {
-    public class Player : MovableSprite, ICollidable
+    public class Player : MovableSprite
     {
         public enum PlayerStates
         {

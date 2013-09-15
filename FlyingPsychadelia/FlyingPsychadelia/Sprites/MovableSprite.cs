@@ -9,7 +9,7 @@ using FlyingPsychadelia.Sprites;
 
 namespace FlyingPsychadelia
 {
-    public class MovableSprite
+    public class MovableSprite : ICollidable
     {
         protected Rectangle _bounds;
         private ContentManager _Content;
