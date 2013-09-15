@@ -15,7 +15,7 @@ namespace FlyingPsychadelia
 
         public bool DetectFire()
         {
-            return Keyboard.GetState().IsKeyDown(Keys.RightControl);
+            return Keyboard.GetState().IsKeyDown(Keys.Space);
         }
         public bool DetectJump()
         {
