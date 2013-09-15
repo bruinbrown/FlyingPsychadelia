@@ -41,6 +41,7 @@
     <Compile Include="IController.cs" />
     <Compile Include="PsychShader.cs" />
     <Compile Include="Sprites\Animation.cs" />
+    <Compile Include="Screens\Controls\GameOverlay.cs" />
     <Compile Include="Sprites\BaseEnemy.cs" />
     <Compile Include="Sprites\HorizontallyOscillatingEnemy.cs" />
     <Compile Include="Sprites\OscillatingEnemy.cs" />
@@ -99,6 +100,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\explode1.png" />
+    <Content Include="Content\EmptyHeart.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\FullHeart.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Jump1.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
