@@ -24,6 +24,8 @@ namespace FlyingPsychadelia.Sprites
         private readonly Random _random;
         private int _health;
         private double _timePlayerSetToInvincible;
+        private double _timeInSecondsPlayDied;
+        public bool PlayDeathAnimation { get; set; }
 
         public int Health
         {
@@ -116,9 +118,13 @@ namespace FlyingPsychadelia.Sprites
             {
                 PlayerState = PlayerStates.Alive;
             }
+            if (PlayerState == PlayerStates.Dead && _timeInSecondsPlayDied < gameTime.TotalGameTime.Seconds)
+            {
+                PlayDeathAnimation = false;
+            }
             Charms.ForEach(c => c.Update(gameTime));
-
         }
+
         public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
         {
             if (Velocity.X > 0)
@@ -142,12 +148,15 @@ namespace FlyingPsychadelia.Sprites
             SetLocation(10, 10);
             PlayerState = PlayerStates.Alive;
             Health = MaxHealth;
+            PlayDeathAnimation = false;
         }
 
         public void PlayHasBeenKilled(GameTime gameTime)
         {
             Health = 0;
             PlayerState = PlayerStates.Dead;
+            PlayDeathAnimation = true;
+            _timeInSecondsPlayDied = gameTime.TotalGameTime.TotalSeconds + .2;
         }
 
         public void PlayHasBeenHurt(GameTime gameTime)
