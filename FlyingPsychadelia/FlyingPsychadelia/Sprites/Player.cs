@@ -88,7 +88,7 @@ namespace FlyingPsychadelia.Sprites
             _jump[2] = content.Load<SoundEffect>("Jump3");
 
             _controller = controller;
-            SetTexture("leprechaun.png");
+            SetTexture("leprechaunanimation.png");
             IsLanded = true;
             _random = new Random();
             PlayerState = PlayerStates.Alive;
@@ -97,10 +97,11 @@ namespace FlyingPsychadelia.Sprites
         }
         public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
         {
+            if (Velocity.X > 0)
+                _Reversed = false;
             if (Velocity.X < 0)
-                DrawReversed(spriteBatch);
-            else
-                base.Draw(spriteBatch);
+                _Reversed = true;
+            base.Draw(spriteBatch);
         }
         public void AddVeocity(Vector2 vector2)
         {
