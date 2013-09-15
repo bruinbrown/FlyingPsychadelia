@@ -42,7 +42,7 @@ namespace FlyingPsychadelia
             {
                 Players[0].SetLocation(StartLayer.MapObjects[0].Bounds.X, StartLayer.MapObjects[0].Bounds.Y);
             }
-            var EnemyObjects = GetLayerObjectsOrNull("Enemies");
+            var EnemyObjects = GetLayerObjectsOrNull("EnemyLayer");
             if (EnemyObjects == null)
             {
                 var Random = new System.Random();
