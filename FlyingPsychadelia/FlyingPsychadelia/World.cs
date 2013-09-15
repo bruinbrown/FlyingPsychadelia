@@ -12,6 +12,7 @@ namespace FlyingPsychadelia
 {
     public class World
     {
+        private MapObjectWrapper[] _blockingObjects;
         private readonly List<Player> _players;
         private readonly Map _map;
         private readonly List<BaseEnemy> _enemies;
@@ -147,8 +148,11 @@ namespace FlyingPsychadelia
                 enemy.Update(gameTime);
             }
             ApplyDeath();
+            _blockingObjects = LayerObjectsOrNull("GroundCollision",
+                                                               Camera.Instance.CameraView).Select(p => new MapObjectWrapper(p)).ToArray();
             ResolveStaticCollisions();
             ResolveEnemyCollisions();
+            BulletCollisions();
             CalculateMaxProgression();
         }
 
@@ -165,10 +169,41 @@ namespace FlyingPsychadelia
                         // do enemy interaction
                     }
                 }
-                
+
             }
         }
 
+        private void BulletCollisions()
+        {
+            foreach (Player player in _players)
+            {
+                var Charms = player.Charms;
+
+                Charm[] CharmArray = Charms.ToArray();
+                foreach (Charm charm in CharmArray)
+                {
+                    BaseEnemy[] EnemyArray = _enemies.ToArray();
+                    foreach (var Enemy in EnemyArray)
+                    {
+                        if (charm.Bounds.Intersects(Enemy.Bounds))
+                        {
+                            // do enemy interaction
+                            _enemies.Remove(Enemy);
+                        }
+                    }
+                    foreach (var obj in _blockingObjects)
+                    {
+                        if (obj.Bounds.Intersects(charm.Bounds))
+                        {
+                            player.Charms.Remove(charm);
+                        }
+                    }
+                    if (!charm.Bounds.Intersects(Camera.Instance.CameraView))
+                        player.Charms.Remove(charm);
+                }
+            }
+
+        }
         private void ApplyDeath()
         {
             var deathObjects = LayerObjectsOrNull("DeathLayer", Camera.Instance.CameraView);
@@ -204,10 +239,10 @@ namespace FlyingPsychadelia
 
         private void ResolveStaticCollisions()
         {
-            var blockingObjects = LayerObjectsOrNull("GroundCollision", Camera.Instance.CameraView).Select(p=>new MapObjectWrapper(p)).ToArray();
+
             foreach (Player player in Players)
             {
-                foreach (var Object in blockingObjects)
+                foreach (var Object in _blockingObjects)
                 {
                     if (player.Bounds.Intersects(Object.Bounds))
                         FixUpCollision(player, Object);

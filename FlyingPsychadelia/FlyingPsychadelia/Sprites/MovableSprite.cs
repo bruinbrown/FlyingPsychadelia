@@ -36,11 +36,11 @@ namespace FlyingPsychadelia
         {
             _Content = content;
         }
-        protected void SetTexture(string TextureName)
+        protected void SetTexture(string TextureName, int FrameWidth, int FrameHeight)
         {
-            _Animation = new Animation(_Content.Load<Texture2D>(TextureName), 32, 32, "leprechaunanimation.png");
+            _Animation = new Animation(_Content.Load<Texture2D>(TextureName), FrameWidth, FrameHeight, "leprechaunanimation.png");
             //_Texture = _Content.Load<Texture2D>(TextureName);
-            SetLocation(10,10);
+            SetLocation(10, 10);
         }
         public void SetLocation(int X, int Y)
         {

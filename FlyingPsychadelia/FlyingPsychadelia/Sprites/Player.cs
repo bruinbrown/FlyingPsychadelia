@@ -68,10 +68,11 @@ namespace FlyingPsychadelia.Sprites
             else if (_controller.DetectFire())
             {
                 // Spawn new Charm
-                var speed = 0.1f * gameTime.ElapsedGameTime.Milliseconds;
+                var speed = 0.7f * gameTime.ElapsedGameTime.Milliseconds;
                 var DirectionVector = _Direction == Direction.Left ? new Vector2(-speed,0): new Vector2(speed,0);
                 var SpawnX = _Direction == Direction.Left ?Bounds.X - 1:Bounds.Right +1;
                 var SpawnY = Bounds.Y + (Bounds.Height/2);
+                if (Charms.Count < 5)
                 Charms.Add(new Charm(_Content,SpawnX,SpawnY,DirectionVector));
             }
 
@@ -97,12 +98,17 @@ namespace FlyingPsychadelia.Sprites
             _jump[2] = content.Load<SoundEffect>("Jump3");
 
             _controller = controller;
-            SetTexture("leprechaunanimation.png");
+            SetTexture("leprechaunanimation.png", 32, 32);
             IsLanded = true;
             _random = new Random();
             PlayerState = PlayerStates.Alive;
             Health = MaxHealth;
             Score = 0;
+        }
+        public override void Update(GameTime gametime)
+        {
+            base.Update(gametime);
+            Charms.ForEach(c => c.Update(gametime));
         }
         public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
         {
@@ -111,6 +117,7 @@ namespace FlyingPsychadelia.Sprites
             if (Velocity.X < 0)
                 _Reversed = true;
             base.Draw(spriteBatch);
+            Charms.ForEach(c => c.Draw(spriteBatch));
         }
         public bool MovingUp()
         {

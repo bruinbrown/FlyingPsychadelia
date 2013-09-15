@@ -12,7 +12,7 @@ namespace FlyingPsychadelia
         public RandomMovingEnemy(ContentManager content, int x, int y)
             : base(content)
         {
-            SetTexture("dragon.png");
+            SetTexture("dragon.png", 32, 32);
             SetLocation(x, y);
         }
 

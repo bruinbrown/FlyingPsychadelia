@@ -12,7 +12,7 @@ namespace FlyingPsychadelia.Sprites
         public Charm(ContentManager content, int x, int y, Vector2 Direction)
             : base(content)
         {
-            SetTexture("charm.png");
+            SetTexture("charm.png", 7, 6);
             SetLocation(x, y);
             AddVeocity(Direction);
         }

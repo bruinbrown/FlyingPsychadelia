@@ -17,7 +17,7 @@ namespace FlyingPsychadelia
             : base(content)
         {
             _OscillationMax = OscillationMax;
-            SetTexture("dragon.png");
+            SetTexture("dragon.png", 32, 32);
             SetLocation(x, y);
             _StartX = x;
             _StartY = y;
