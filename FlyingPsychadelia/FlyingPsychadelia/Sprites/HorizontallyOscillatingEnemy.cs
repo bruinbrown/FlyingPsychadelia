@@ -26,10 +26,11 @@ namespace FlyingPsychadelia
         }
         public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
         {
+            if(Velocity.X>0)
+                _Reversed = false;
             if (Velocity.X < 0)
-                base.Draw(spriteBatch);
-            else
-                DrawReversed(spriteBatch);
+                _Reversed = true;
+            base.Draw(spriteBatch);
         }
 
     }
