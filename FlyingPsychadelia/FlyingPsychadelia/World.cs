@@ -5,6 +5,7 @@ using System.Text;
 using FuncWorks.XNA.XTiled;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 
 namespace FlyingPsychadelia
 {
@@ -13,6 +14,7 @@ namespace FlyingPsychadelia
         private readonly List<Player> _players;
         private readonly Map _map;
         private readonly List<BaseEnemy> _enemies;
+        private readonly ContentManager _content;
         private List<MapObjectWrapper> _BlockingObjects { get; set; }
         public int Progression { get; set; }
 
@@ -23,13 +25,37 @@ namespace FlyingPsychadelia
                 return _players;
             }
         }
-        public World(Map map, List<Player> Players, List<BaseEnemy> Enemies)
+        public World(Map map, ContentManager content)
         {
-            _enemies = Enemies;
-            _BlockingObjects = map.ObjectLayers[0].MapObjects.Select(p => new MapObjectWrapper(p)).ToList();
-            _players = Players;
+            _content = content;
+            _enemies = new List<BaseEnemy>();
+            _BlockingObjects = map.ObjectLayers["GroundCollision"].MapObjects.Select(p => new MapObjectWrapper(p)).ToList();
+            _players = new List<Player>();
             _map = map;
+
+            _players.Add(new Player(_content, new Player1KeyboardController()));
+            _players.Add(new Player(_content, new Player2KeyboardController()));
+            for (int i = 0; i < Players.Count; i++)
+            {
+                _players[i].SetLocation((i + 1) * 400, 350);
+            }
+
+            var Random = new System.Random();
+            for (int i = 0; i < 50; i++)
+            {
+                var x = Random.Next(_map.Width * _map.TileWidth);
+                var y = Random.Next(_map.Height * _map.TileHeight);
+                _enemies.Add(new HorizontallyOscillatingEnemy(_content, x, y, 150));
+            }
+            for (int i = 0; i < 50; i++)
+            {
+                var x = Random.Next(_map.Width * _map.TileWidth);
+                var y = Random.Next(_map.Height * _map.TileHeight);
+                _enemies.Add(new VerticallyOscillatingEnemy(_content, x, y, 150));
+            }
+
         }
+
         public void Update()
         {
             foreach (Player player in Players)
