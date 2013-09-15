@@ -206,7 +206,7 @@ namespace FlyingPsychadelia
 
         private void CheckForWorldReset()
         {
-            bool resetLevel = _players.Count(p => p.PlayerState == Player.PlayerStates.Dead) == _players.Count();
+            bool resetLevel = _players.Count(p => p.PlayerState == Player.PlayerStates.Dead && !p.PlayDeathAnimation) == _players.Count();
 
             if (resetLevel)
             {
