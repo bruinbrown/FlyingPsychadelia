@@ -15,6 +15,7 @@ namespace FlyingPsychadelia.Sprites
         private Texture2D _texture;
         private int _frameHeight;
         private int _frameWidth;
+        private int _currentFrameX;
 
         public int FrameWidth
         {
@@ -44,18 +45,23 @@ namespace FlyingPsychadelia.Sprites
             get
             {
                return new Rectangle(
-                   _currentFrame * FrameWidth,0,FrameWidth,FrameHeight
+                   _currentFrameX * FrameWidth,_currentFrameY * FrameHeight,FrameWidth,FrameHeight
                    ); 
             }
         }
+
+        public int ColumnsCount { get; private set; }
+        public int RowsCount { get; private set; }
 
         public Animation(Texture2D texture, int frameWidth, int frameHeight, string name)
         {
             _texture = texture;
             _frameWidth = frameWidth;
-            _frameCount = texture.Width/frameWidth;
             _frameHeight = frameHeight;
             _name = name;
+            ColumnsCount = _texture.Width/frameWidth;
+            RowsCount = _texture.Height/frameHeight;
+            _frameCount = ColumnsCount*RowsCount;
             _frameDelay = 0.1f;
         }
 
@@ -71,6 +77,15 @@ namespace FlyingPsychadelia.Sprites
             {
                 _currentFrame = 0;
             }
+            _currentFrameX = _currentFrame%ColumnsCount;
+            if (_currentFrameX == 0)
+            {
+                _currentFrameY++;
+            }
+            if (_currentFrameY == RowsCount)
+            {
+                _currentFrameY = 0;
+            }
             _frameTimer = 0f;
         }
 
@@ -83,5 +98,7 @@ namespace FlyingPsychadelia.Sprites
         }
 
         public int _frameCount { get; set; }
+
+        public int _currentFrameY { get; set; }
     }
 }

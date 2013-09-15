@@ -23,6 +23,8 @@ namespace FlyingPsychadelia.Sprites
         public bool IsLanded;
         private readonly Random _random;
         private int _health;
+        private double _timePlayerSetToInvincible;
+
         public int Health
         {
             get { return _health; }
@@ -69,11 +71,11 @@ namespace FlyingPsychadelia.Sprites
             {
                 // Spawn new Charm
                 var speed = 0.7f * gameTime.ElapsedGameTime.Milliseconds;
-                var DirectionVector = _Direction == Direction.Left ? new Vector2(-speed,0): new Vector2(speed,0);
-                var SpawnX = _Direction == Direction.Left ?Bounds.X - 1:Bounds.Right +1;
-                var SpawnY = Bounds.Y + (Bounds.Height/2);
+                var DirectionVector = _Direction == Direction.Left ? new Vector2(-speed, 0) : new Vector2(speed, 0);
+                var SpawnX = _Direction == Direction.Left ? Bounds.X - 1 : Bounds.Right + 1;
+                var SpawnY = Bounds.Y + (Bounds.Height / 2);
                 if (Charms.Count < 5)
-                Charms.Add(new Charm(_Content,SpawnX,SpawnY,DirectionVector));
+                    Charms.Add(new Charm(_Content, SpawnX, SpawnY, DirectionVector));
             }
 
             if (_controller.DetectJump())
@@ -105,10 +107,17 @@ namespace FlyingPsychadelia.Sprites
             Health = MaxHealth;
             Score = 0;
         }
-        public override void Update(GameTime gametime)
+
+        public override void Update(GameTime gameTime)
         {
-            base.Update(gametime);
-            Charms.ForEach(c => c.Update(gametime));
+            base.Update(gameTime);
+
+            if (PlayerState == PlayerStates.Invincible && _timePlayerSetToInvincible < gameTime.TotalGameTime.Seconds)
+            {
+                PlayerState = PlayerStates.Alive;
+            }
+            Charms.ForEach(c => c.Update(gameTime));
+
         }
         public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
         {
@@ -126,7 +135,33 @@ namespace FlyingPsychadelia.Sprites
         public bool MovingRight()
         {
             return Velocity.X > 0;
+        }
 
+        public void ResetPlayer()
+        {
+            SetLocation(10, 10);
+            PlayerState = PlayerStates.Alive;
+            Health = MaxHealth;
+        }
+
+        public void PlayHasBeenKilled(GameTime gameTime)
+        {
+            Health = 0;
+            PlayerState = PlayerStates.Dead;
+        }
+
+        public void PlayHasBeenHurt(GameTime gameTime)
+        {
+            if (PlayerState == PlayerStates.Alive)
+            {
+                Health--;
+                if (Health > 0)
+                {
+                    Health--;
+                    PlayerState = PlayerStates.Invincible;
+                    _timePlayerSetToInvincible = gameTime.TotalGameTime.TotalSeconds + 5;
+                }
+            }
         }
     }
 }
