@@ -62,22 +62,24 @@ namespace FlyingPsychadelia
             }
 
         }
-
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             foreach (Player player in Players)
             {
-                player.Velocity = Vector2.Zero;
                 // Add gravity
-                player.AddVeocity(new Vector2(player.Velocity.X * -0.2f, 1));
+                float ms = gameTime.ElapsedGameTime.Milliseconds;
+                float friction = -0.004f;
+                if (player.Velocity.X < 0) friction *= 2f; //why??
+
+                player.AddVeocity(new Vector2(player.Velocity.X * friction * ms, 0.02f * ms));
+
                 // Add Directional Velocity
-                player.DetectMovement();
-                // Move player based on cumulative velocity
-                player.Update(1);  // 1 doesnothing. Fix this for varying framerates.
+                player.DetectMovement(gameTime);
+                player.Update(gameTime);
             }
             foreach (BaseEnemy enemy in _enemies)
             {
-                enemy.Update(1);
+                enemy.Update(gameTime);
             }
             ResolveCollisions();
             CalculateMaxProgression();

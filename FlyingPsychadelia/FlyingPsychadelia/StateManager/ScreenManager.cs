@@ -221,7 +221,7 @@ namespace FlyingPsychadelia.StateManager
             {
                 if (screen.ScreenState == ScreenState.Hidden)
                     continue;
-
+                
                 screen.Draw(gameTime);
             }
         }

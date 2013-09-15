@@ -9,6 +9,7 @@ namespace FlyingPsychadelia
     /// <summary>
     /// This is the main type for your game
     /// </summary>
+
     public class Game1 : Game
     {
         private readonly GraphicsDeviceManager _graphics;
