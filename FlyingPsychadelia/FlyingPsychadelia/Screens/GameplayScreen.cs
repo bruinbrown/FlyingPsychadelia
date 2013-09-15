@@ -61,7 +61,7 @@ namespace FlyingPsychadelia.Screens
             _map = _content.Load<Map>("map2");
 
             _world = new World(_map, _content);
-            _gameOverlay.SetPlayer(_world.Players[0]);
+            _gameOverlay.SetWorld(_world);
 
             Camera.Instance.SetMap(_map, _world.Players[0].LocationAsVector(), ScreenManager.GraphicsDevice.Viewport);
 

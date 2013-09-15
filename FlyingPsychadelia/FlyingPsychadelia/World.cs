@@ -18,6 +18,8 @@ namespace FlyingPsychadelia
         private readonly ContentManager _content;
         private List<MapObjectWrapper> _BlockingObjects { get; set; }
         public int Progression { get; set; }
+        public int Time { get; set; }
+        private const int MaxTime = 500;
 
         public List<Player> Players
         {
@@ -34,6 +36,8 @@ namespace FlyingPsychadelia
             _BlockingObjects = GetLayerOrNull("GroundCollision").MapObjects.Select(p => new MapObjectWrapper(p)).ToList();
             _players = new List<Player>();
             _players.Add(new Player(_content, new Player1KeyboardController()));
+            Time = 500;
+
             ObjectLayer StartLayer = GetLayerOrNull("StartLayer");
             if (StartLayer != null)
             {
@@ -103,6 +107,7 @@ namespace FlyingPsychadelia
         }
         public void Update(GameTime gameTime)
         {
+            Time = MaxTime - gameTime.TotalGameTime.Seconds;
             foreach (Player player in Players)
             {
                 // Add gravity
