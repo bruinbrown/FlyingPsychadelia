@@ -26,6 +26,7 @@ namespace FlyingPsychadelia.Sprites
         private double _timePlayerSetToInvincible;
         private double _timeInSecondsPlayDied;
         public bool PlayDeathAnimation { get; set; }
+        public float _timeUntilCanShoot;
 
         public int Health
         {
@@ -77,8 +78,11 @@ namespace FlyingPsychadelia.Sprites
                 var DirectionVector = _Direction == Direction.Left ? new Vector2(-speed, 0) : new Vector2(speed, 0);
                 var SpawnX = _Direction == Direction.Left ? Bounds.X - 1 : Bounds.Right + 1;
                 var SpawnY = Bounds.Y + (Bounds.Height / 2);
-                if (Charms.Count < 5)
+                if (Charms.Count < 5 && _timeUntilCanShoot <= 0 )
+                {
                     Charms.Add(new Charm(_Content, SpawnX, SpawnY, DirectionVector));
+                    _timeUntilCanShoot = 180;
+                }
             }
 
             if (_controller.DetectJump())
@@ -109,6 +113,7 @@ namespace FlyingPsychadelia.Sprites
             PlayerState = PlayerStates.Alive;
             Health = MaxHealth;
             Score = 0;
+            _timeUntilCanShoot = 0;
         }
 
         public override void Update(GameTime gameTime)
@@ -124,6 +129,9 @@ namespace FlyingPsychadelia.Sprites
                 PlayDeathAnimation = false;
             }
             Charms.ForEach(c => c.Update(gameTime));
+
+            _timeUntilCanShoot -= gameTime.ElapsedGameTime.Milliseconds;
+            if (_timeUntilCanShoot < 0) _timeUntilCanShoot = 0;
         }
 
         public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
