@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace FlyingPsychadelia
 {
-    public class MovableSprite
+    public class MovableSprite : ICollidable
     {
         protected Rectangle _bounds;
         private ContentManager _Content;
