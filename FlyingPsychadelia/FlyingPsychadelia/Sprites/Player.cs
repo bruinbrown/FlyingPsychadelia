@@ -8,67 +8,70 @@ namespace FlyingPsychadelia.Sprites
     public class Player : MovableSprite, ICollidable
     {
         private readonly IController _controller;
-        private SoundEffect[] _Jump;
-        public bool _IsLanded;
-        private Random _random;
+        private readonly SoundEffect[] _jump;
+        public bool IsLanded;
+        private readonly Random _random;
         public int Health { get; set; }
+        public int Score { get; set; }
+
         public const int MaxHealth = 3;
 
         private void JumpSound()
         {
-            _Jump[ _random.Next()%3 ].Play();
+            _jump[_random.Next() % 3].Play();
         }
 
         public void DetectMovement(GameTime gameTime)
         {
-            float MoveMagnitude = 0.02f * gameTime.ElapsedGameTime.Milliseconds;
-            float MoveMagnitudeX = MoveMagnitude;
-            if (!_IsLanded) MoveMagnitudeX *= 0.7f; // dampen in air
+            float moveMagnitude = 0.02f * gameTime.ElapsedGameTime.Milliseconds;
+            float moveMagnitudeX = moveMagnitude;
+            if (!IsLanded) moveMagnitudeX *= 0.7f; // dampen in air
 
             if (_controller.DetectRight())
             {
-                AddVeocity(new Vector2(MoveMagnitudeX, 0));
+                AddVeocity(new Vector2(moveMagnitudeX, 0));
             }
             else if (_controller.DetectLeft())
             {
-                AddVeocity(new Vector2(-MoveMagnitudeX, 0));
+                AddVeocity(new Vector2(-moveMagnitudeX, 0));
             }
             else if (_controller.DetectDown())
             {
-                AddVeocity(new Vector2(0, MoveMagnitude));
+                AddVeocity(new Vector2(0, moveMagnitude));
             }
             else if (_controller.DetectFire())
             {
-                
+
             }
 
             if (_controller.DetectJump())
             {
 
-                if (_IsLanded)
+                if (IsLanded)
                 {
-                    AddVeocity(new Vector2(0, -MoveMagnitude * 25f));
-                    _IsLanded = false;
+                    AddVeocity(new Vector2(0, -moveMagnitude * 25f));
+                    IsLanded = false;
                     JumpSound();
                 }
             }
             //
-            if (Math.Abs(Velocity.X) < MoveMagnitude * 0.2f)
-                AddVeocity( new Vector2(-Velocity.X, 0) );
+            if (Math.Abs(Velocity.X) < moveMagnitude * 0.2f)
+                AddVeocity(new Vector2(-Velocity.X, 0));
         }
         public Player(ContentManager content, IController controller)
             : base(content)
         {
-            _Jump = new SoundEffect[3];
-            _Jump[0] = content.Load<SoundEffect>("Jump1");
-            _Jump[1] = content.Load<SoundEffect>("Jump2");
-            _Jump[2] = content.Load<SoundEffect>("Jump3");
+            _jump = new SoundEffect[3];
+            _jump[0] = content.Load<SoundEffect>("Jump1");
+            _jump[1] = content.Load<SoundEffect>("Jump2");
+            _jump[2] = content.Load<SoundEffect>("Jump3");
 
             _controller = controller;
             SetTexture("leprechaun.png");
-            _IsLanded = true;
+            IsLanded = true;
             _random = new Random();
             Health = MaxHealth;
+            Score = 0;
         }
 
         public void AddVeocity(Vector2 vector2)
@@ -82,7 +85,7 @@ namespace FlyingPsychadelia.Sprites
         public bool MovingRight()
         {
             return Velocity.X > 0;
-            
+
         }
     }
 }

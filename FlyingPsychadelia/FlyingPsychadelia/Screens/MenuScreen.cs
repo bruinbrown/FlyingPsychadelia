@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FlyingPsychadelia.Extensions;
 using FlyingPsychadelia.Screens.Controls;
 using FlyingPsychadelia.Screens.Events;
 using FlyingPsychadelia.StateManager;
@@ -122,6 +123,7 @@ namespace FlyingPsychadelia.Screens
         /// </summary>
         protected virtual void UpdateMenuEntryLocations()
         {
+            SpriteFont font = ScreenManager.Font;
             // Make the menu slide into place during transitions, using a
             // power curve to make things look more interesting (this makes
             // the movement slow down as it nears the end).
@@ -134,7 +136,7 @@ namespace FlyingPsychadelia.Screens
             foreach (MenuEntry menuEntry in _menuEntries)
             {
                 // each entry is to be centered horizontally
-                position.X = (ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuEntry.GetWidth(this) / 2);
+                position.X = (ScreenManager.GraphicsDevice.Viewport.Width / 2 - font.GetWidth(menuEntry.Text) / 2);
 
                 if (ScreenState == ScreenState.TransitionOn)
                 {
@@ -148,8 +150,8 @@ namespace FlyingPsychadelia.Screens
                 // set the entry's position
                 menuEntry.Position = position;
 
-                // move down for the next entry the size of this entry
-                position.Y += menuEntry.GetHeight(this);
+                // move down for the next entry the size of this entry        
+                position.Y += font.GetHeight();
             }
         }
 

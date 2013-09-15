@@ -143,8 +143,25 @@ namespace FlyingPsychadelia
             {
                 enemy.Update(gameTime);
             }
+            ApplyDeath();
             ResolveCollisions();
             CalculateMaxProgression();
+        }
+
+        private void ApplyDeath()
+        {
+            var deathObjects = LayerObjectsOrNull("DeathLayer", Camera.Instance.CameraView);
+            if (deathObjects == null) return;
+            foreach (var deathObject in deathObjects)
+            {
+                foreach (var player in _players)
+                {
+                    if (player.Bounds.Intersects(deathObject.Bounds))
+                    {
+                        player.Health--;
+                    }
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -206,7 +223,7 @@ namespace FlyingPsychadelia
                     // Adjust up
                     OffsetPlayerBounds(Object1, 0, -dy);
                     if (player != null)
-                        player._IsLanded = true;
+                        player.IsLanded = true;
                 }
                 Object1.Velocity = new Vector2(Object1.Velocity.X, 0.0f);
             }
