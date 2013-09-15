@@ -70,7 +70,7 @@ namespace FlyingPsychadelia.Screens
             // it should not try to catch up.
             ScreenManager.Game.ResetElapsedTime();
 
-            _progressionShader = new ProgressionShader(ScreenManager.GraphicsDevice, Color.Red);
+            _progressionShader = new ProgressionShader(ScreenManager.GraphicsDevice, _map, Color.Blue);
             _psychShader = new PsychShader(ScreenManager.GraphicsDevice);
         }
 
@@ -156,13 +156,13 @@ namespace FlyingPsychadelia.Screens
         {
             // This game has a blue background. Why? Because!
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target,
-                                               Color.CornflowerBlue, 0, 0);//`
+                                               Color.Gray, 0, 0);
 
             var spriteBatch = ScreenManager.SpriteBatch;
 
             spriteBatch.Begin();
 
-            _progressionShader.Draw(spriteBatch, _world.Progression / _map.Width);
+            _progressionShader.Draw(spriteBatch, _world.Progression, _map);
             _psychShader.Draw(spriteBatch);
 
             //Rectangle Camera = new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height);
