@@ -140,6 +140,8 @@ namespace FlyingPsychadelia.Screens
 
                 const string message = "Loading...";
 
+                ScreenManager.GraphicsDevice.Clear(Color.Black);
+
                 // Center the text in the viewport.
                 Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
                 Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);

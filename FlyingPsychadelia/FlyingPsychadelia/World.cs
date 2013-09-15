@@ -146,10 +146,11 @@ namespace FlyingPsychadelia
             {
                 enemy.Update(gameTime);
             }
-            ApplyDeath();
+            CheckForPlayerDeath(gameTime);
             ResolveStaticCollisions();
             ResolveEnemyCollisions();
             CalculateMaxProgression();
+            CheckForWorldReset();
         }
 
         private void ResolveEnemyCollisions()
@@ -165,11 +166,11 @@ namespace FlyingPsychadelia
                         // do enemy interaction
                     }
                 }
-                
+
             }
         }
 
-        private void ApplyDeath()
+        private void CheckForPlayerDeath(GameTime gameTime)
         {
             var deathObjects = LayerObjectsOrNull("DeathLayer", Camera.Instance.CameraView);
             if (deathObjects == null) return;
@@ -179,7 +180,7 @@ namespace FlyingPsychadelia
                 {
                     if (player.Bounds.Intersects(deathObject.Bounds))
                     {
-                        player.Health--;
+                        player.PlayHasBeenKilled(gameTime);
                     }
                 }
             }
@@ -196,15 +197,29 @@ namespace FlyingPsychadelia
                 enemy.Draw(spriteBatch);
             }
         }
+
         private void CalculateMaxProgression()
         {
             var currentProgress = Players.Select(p => p.Bounds.Center.X).Max();
             Progression = Math.Max(Progression, currentProgress);
         }
 
+        private void CheckForWorldReset()
+        {
+            bool resetLevel = _players.Count(p => p.PlayerState == Player.PlayerStates.Dead) == _players.Count();
+
+            if (resetLevel)
+            {
+                foreach (var player in Players)
+                {
+                    player.ResetPlayer();
+                }
+            }
+        }
+
         private void ResolveStaticCollisions()
         {
-            var blockingObjects = LayerObjectsOrNull("GroundCollision", Camera.Instance.CameraView).Select(p=>new MapObjectWrapper(p)).ToArray();
+            var blockingObjects = LayerObjectsOrNull("GroundCollision", Camera.Instance.CameraView).Select(p => new MapObjectWrapper(p)).ToArray();
             foreach (Player player in Players)
             {
                 foreach (var Object in blockingObjects)
@@ -274,6 +289,7 @@ namespace FlyingPsychadelia
         }
 
     }
+
     public class MapObjectWrapper : ICollidable
     {
 

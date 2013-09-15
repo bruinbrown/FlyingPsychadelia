@@ -12,13 +12,13 @@ namespace FlyingPsychadelia.Screens
     {
         private bool _skipScreen;
 
-        private string _warningLine1 = "A very small percentage of people may experience a seizure when";
-        private string _warningLine2 = "exposed to certain visual images, including flashing lights or patters";
-        private string _warningLine3 = "that may appear in video games. If you or any of your relatives have";
-        private string _warningLine4 = "a history of seizures or epilepsy, consult a doctor before playing.";
+        private const string WarningLine1 = "A very small percentage of people may experience a seizure when";
+        private const string WarningLine2 = "exposed to certain visual images, including flashing lights or patters";
+        private const string WarningLine3 = "that may appear in video games. If you or any of your relatives have";
+        private const string WarningLine4 = "a history of seizures or epilepsy, consult a doctor before playing.";
 
-        private string _warningLine5 = "Immediately stop playing and consult a doctor if you experience any";
-        private string _warningLine6 = "symptoms such as lightheadedness, disorientation and twitching.";
+        private const string WarningLine5 = "Immediately stop playing and consult a doctor if you experience any";
+        private const string WarningLine6 = "symptoms such as lightheadedness, disorientation and twitching.";
 
         public override void HandleInput(InputState input)
         {
@@ -47,33 +47,33 @@ namespace FlyingPsychadelia.Screens
 
             int startY = 125;
             // Center the text in the viewport.
-            Vector2 textPosition = new Vector2(font.GetWidth(_warningLine1) / 10, startY);
+            Vector2 textPosition = new Vector2(font.GetWidth(WarningLine1) / 10, startY);
 
             Color color = Color.White;
 
             // Draw the text.
             spriteBatch.Begin();
-            spriteBatch.DrawString(font, _warningLine1, textPosition, color, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+            spriteBatch.DrawString(font, WarningLine1, textPosition, color, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
 
             startY += 25;
-            textPosition = new Vector2(font.GetWidth(_warningLine2) / 12, startY);
-            spriteBatch.DrawString(font, _warningLine2, textPosition, color, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+            textPosition = new Vector2(font.GetWidth(WarningLine2) / 12, startY);
+            spriteBatch.DrawString(font, WarningLine2, textPosition, color, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
 
             startY += 25;
-            textPosition = new Vector2(font.GetWidth(_warningLine3) / 12, startY);
-            spriteBatch.DrawString(font, _warningLine3, textPosition, color, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+            textPosition = new Vector2(font.GetWidth(WarningLine3) / 12, startY);
+            spriteBatch.DrawString(font, WarningLine3, textPosition, color, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
 
             startY += 25;
-            textPosition = new Vector2(font.GetWidth(_warningLine4) / 10, startY);
-            spriteBatch.DrawString(font, _warningLine4, textPosition, color, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+            textPosition = new Vector2(font.GetWidth(WarningLine4) / 10, startY);
+            spriteBatch.DrawString(font, WarningLine4, textPosition, color, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
 
             startY += 50;
-            textPosition = new Vector2(font.GetWidth(_warningLine5) / 12, startY);
-            spriteBatch.DrawString(font, _warningLine5, textPosition, color, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+            textPosition = new Vector2(font.GetWidth(WarningLine5) / 12, startY);
+            spriteBatch.DrawString(font, WarningLine5, textPosition, color, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
 
             startY += 25;
-            textPosition = new Vector2(font.GetWidth(_warningLine6) / 9, startY);
-            spriteBatch.DrawString(font, _warningLine6, textPosition, color, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+            textPosition = new Vector2(font.GetWidth(WarningLine6) / 9, startY);
+            spriteBatch.DrawString(font, WarningLine6, textPosition, color, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
             spriteBatch.End();
 
         }
