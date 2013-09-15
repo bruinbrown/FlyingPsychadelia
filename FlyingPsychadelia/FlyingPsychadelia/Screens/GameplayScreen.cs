@@ -88,6 +88,20 @@ namespace FlyingPsychadelia.Screens
 
         #region Update and Draw
 
+        private ObjectLayer GetLayerOrNull(string LayerName)
+        {
+            ObjectLayer Layer = null;
+            try
+            {
+                Layer = _map.ObjectLayers[LayerName];
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return Layer;
+        }
+
 
         /// <summary>
         /// Updates the state of the game. This method checks the GameScreen.IsActive
@@ -99,7 +113,7 @@ namespace FlyingPsychadelia.Screens
         {
             base.Update(gameTime, otherScreenHasFocus, false);
 
-            if (_world.Players[0].Bounds.Left > 3150)
+            if (_world.WorldState == World.WorldStates.End)
             {
                 LoadingScreen.Load(ScreenManager, "Yay! Nice Trip!", 0, new MainMenuScreen());
             }

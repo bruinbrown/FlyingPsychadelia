@@ -7,11 +7,20 @@ using FuncWorks.XNA.XTiled;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
 
 namespace FlyingPsychadelia
 {
     public class World
     {
+        public enum WorldStates
+        {
+            Playing,
+            End
+        }
+
+        public WorldStates WorldState { get; private set; }
+
         private MapObjectWrapper[] _blockingObjects;
         private readonly List<Player> _players;
         private readonly Map _map;
@@ -21,6 +30,8 @@ namespace FlyingPsychadelia
         public int Progression { get; set; }
         public int Time { get; set; }
         private const int MaxTime = 500;
+        private readonly SoundEffect _explodeSound;
+        private readonly SoundEffect _hitSound;
 
         public List<Player> Players
         {
@@ -37,14 +48,18 @@ namespace FlyingPsychadelia
             _players = new List<Player>();
             _players.Add(new Player(_content, new Player1KeyboardController()));
             Time = 500;
+            WorldState = WorldStates.Playing;
+
+            _explodeSound = content.Load<SoundEffect>("Explosion");
 
             ObjectLayer startLayer = GetLayerOrNull("StartLayer");
             if (startLayer != null)
             {
                 var startBounds = startLayer.MapObjects.Single(m => m.Name == "Start").Bounds;
+                //startBounds = new Rectangle(3000, 1, 32, 32);
                 Players[0].SetLocation(startBounds.X, startBounds.Y);
 
-                
+
                 var endBounds = startLayer.MapObjects.Single(m => m.Name == "End").Bounds;
                 _potOfGold = new PotOfGold(content, endBounds);
             }
@@ -161,6 +176,18 @@ namespace FlyingPsychadelia
             BulletCollisions();
             CalculateMaxProgression();
             CheckForWorldReset();
+            CheckForWorldEnd();
+        }
+
+        private void CheckForWorldEnd()
+        {
+            foreach (var player in _players)
+            {
+                if (_potOfGold.Bounds.Intersects(player.Bounds))
+                {
+                    WorldState = WorldStates.End;
+                }
+            }
         }
 
         private void ResolveEnemyCollisions(GameTime gameTime)
@@ -175,6 +202,7 @@ namespace FlyingPsychadelia
                     {
                         player.PlayHasBeenHurt(gameTime);
                         _enemies.Remove(enemy);
+                        _explodeSound.Play();
                     }
                 }
 
@@ -197,6 +225,7 @@ namespace FlyingPsychadelia
                         {
                             // do enemy interaction
                             _enemies.Remove(enemy);
+                            _explodeSound.Play();
                             player.Score += 100;
                         }
                     }
