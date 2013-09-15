@@ -34,12 +34,6 @@ namespace FlyingPsychadelia
             _map = map;
 
             _players.Add(new Player(_content, new Player1KeyboardController()));
-            _players.Add(new Player(_content, new Player2KeyboardController()));
-            for (int i = 0; i < Players.Count; i++)
-            {
-                _players[i].SetLocation((i + 1) * 400, 350);
-            }
-
             var Random = new System.Random();
             for (int i = 0; i < 50; i++)
             {
