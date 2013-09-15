@@ -120,8 +120,25 @@ namespace FlyingPsychadelia
             {
                 enemy.Update(gameTime);
             }
+            ApplyDeath();
             ResolveCollisions();
             CalculateMaxProgression();
+        }
+
+        private void ApplyDeath()
+        {
+            var deathObjects = LayerObjectsOrNull("DeathLayer", Camera.Instance.CameraView);
+            if (deathObjects == null) return;
+            foreach (var deathObject in deathObjects)
+            {
+                foreach (var player in _players)
+                {
+                    if (player.Bounds.Intersects(deathObject.Bounds))
+                    {
+                        player.Health--;
+                    }
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
