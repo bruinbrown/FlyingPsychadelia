@@ -61,7 +61,7 @@ namespace FlyingPsychadelia.Screens
             _map = _content.Load<Map>("map2");
 
             _world = new World(_map, _content);
-            _gameOverlay.SetPlayer(_world.Players[0]);
+            _gameOverlay.SetWorld(_world);
 
             Camera.Instance.SetMap(_map, _world.Players[0].LocationAsVector(), ScreenManager.GraphicsDevice.Viewport);
 
@@ -163,7 +163,8 @@ namespace FlyingPsychadelia.Screens
             spriteBatch.Begin();
 
             _progressionShader.Draw(spriteBatch, _world.Progression, _map);
-            _psychShader.Draw(spriteBatch);
+            if( ! _world.Players[0].IsLanded )
+                _psychShader.Draw(spriteBatch);
 
             //Rectangle Camera = new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height);
             _map.Draw(spriteBatch, Camera.Instance.CameraView);

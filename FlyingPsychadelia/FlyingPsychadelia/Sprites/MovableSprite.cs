@@ -60,6 +60,17 @@ namespace FlyingPsychadelia
         {
             return new Vector2(Bounds.X,Bounds.Y);
         }
+        protected void DrawReversed(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(_Texture,
+                             GetBoundsAdjustedForCamera(Bounds),
+                             null,
+                             Color.White,
+                             0.0f,
+                             new Vector2(),
+                             SpriteEffects.FlipHorizontally,
+                             0);
+        }
 
     }
 }

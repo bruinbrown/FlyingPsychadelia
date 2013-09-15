@@ -17,6 +17,8 @@ namespace FlyingPsychadelia
         private readonly List<BaseEnemy> _enemies;
         private readonly ContentManager _content;
         public int Progression { get; set; }
+        public int Time { get; set; }
+        private const int MaxTime = 500;
 
         public List<Player> Players
         {
@@ -32,6 +34,8 @@ namespace FlyingPsychadelia
             _map = map;
             _players = new List<Player>();
             _players.Add(new Player(_content, new Player1KeyboardController()));
+            Time = 500;
+
             ObjectLayer StartLayer = GetLayerOrNull("StartLayer");
             if (StartLayer != null)
             {
@@ -54,6 +58,29 @@ namespace FlyingPsychadelia
                     _enemies.Add(new VerticallyOscillatingEnemy(_content, x, y, 150));
                 }
 
+            }
+            else
+            {
+                foreach (MapObject mapObject in EnemyObjects)
+                {
+                    var x = mapObject.Bounds.X;
+                    var y = mapObject.Bounds.Y;
+                    string EnemyType = mapObject.Properties["Type"].Value;
+                    switch (EnemyType)
+                    {
+
+                        case "V":
+                            _enemies.Add(new VerticallyOscillatingEnemy(_content, x, y, 150));
+                            break;
+                        case "H":
+                            _enemies.Add(new HorizontallyOscillatingEnemy(_content, x, y, 150));
+                            break;
+                        case "S":
+                        case "":
+                            _enemies.Add(new StaticEnemy(_content, x, y));
+                            break;
+                    }
+                }
             }
         }
         private IEnumerable<MapObject> GetLayerObjectsOrNull(string LayerName)
@@ -101,6 +128,7 @@ namespace FlyingPsychadelia
         }
         public void Update(GameTime gameTime)
         {
+            Time = MaxTime - gameTime.TotalGameTime.Seconds;
             foreach (Player player in Players)
             {
                 // Add gravity

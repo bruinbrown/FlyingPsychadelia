@@ -7,11 +7,32 @@ namespace FlyingPsychadelia.Sprites
 {
     public class Player : MovableSprite
     {
+        public enum PlayerStates
+        {
+            Alive,
+            Dead,
+            Invincible
+        }
+
+        public PlayerStates PlayerState;
         private readonly IController _controller;
         private readonly SoundEffect[] _jump;
         public bool IsLanded;
         private readonly Random _random;
-        public int Health { get; set; }
+        private int _health;
+        public int Health
+        {
+            get { return _health; }
+            set
+            {
+                _health = value;
+                if (Health <= 0)
+                {
+                    PlayerState = PlayerStates.Dead;
+                }
+            }
+        }
+
         public int Score { get; set; }
 
         public const int MaxHealth = 3;
@@ -70,10 +91,17 @@ namespace FlyingPsychadelia.Sprites
             SetTexture("leprechaun.png");
             IsLanded = true;
             _random = new Random();
+            PlayerState = PlayerStates.Alive;
             Health = MaxHealth;
             Score = 0;
         }
-
+        public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
+        {
+            if (Velocity.X < 0)
+                DrawReversed(spriteBatch);
+            else
+                base.Draw(spriteBatch);
+        }
         public void AddVeocity(Vector2 vector2)
         {
             Velocity = new Vector2(Velocity.X + vector2.X, Velocity.Y + vector2.Y);

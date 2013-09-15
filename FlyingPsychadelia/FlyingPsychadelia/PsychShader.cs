@@ -22,10 +22,10 @@ namespace FlyingPsychadelia
             //todo: enable when flying only
 
             Color randColor = new Color();
-            randColor.R = 0;// (byte)_random.Next(100);
-            randColor.G = 0;//(byte)_random.Next(100);
-            randColor.B = 0;//(byte)_random.Next(100);
-            randColor.A = 0;//(byte)_random.Next(100);
+            randColor.R = (byte)_random.Next(100);
+            randColor.G = (byte)_random.Next(100);
+            randColor.B = (byte)_random.Next(100);
+            randColor.A = (byte)_random.Next(100);
             var progressRectangle = new Rectangle(0, 0, _graphics.Viewport.Width, _graphics.Viewport.Height);
             spriteBatch.Draw(_gradient, progressRectangle, randColor);
         }
