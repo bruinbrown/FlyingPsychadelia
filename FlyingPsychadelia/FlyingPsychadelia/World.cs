@@ -233,6 +233,7 @@ namespace FlyingPsychadelia
             {
                 enemy.Draw(spriteBatch);
             }
+            //_map.DrawObjectLayer(spriteBatch, 0,Camera.Instance.CameraView, 0);
         }
 
         private void CalculateMaxProgression()
@@ -284,13 +285,13 @@ namespace FlyingPsychadelia
             if (Math.Abs(dx) > Math.Abs(dy))
             {
                 // Correct Vertical
-                if (Object1.Velocity.Y < 0)
+                if (Object1.Bounds.Center.Y >= Overlap.Center.Y)
                 {
                     // Adjust down
                     OffsetPlayerBounds(Object1, 0, dy);
                 }
 
-                if (Object1.Velocity.Y >= 0)
+                if (Object1.Bounds.Center.Y < Overlap.Center.Y)
                 {
                     // Adjust up
                     OffsetPlayerBounds(Object1, 0, -dy);
@@ -302,13 +303,13 @@ namespace FlyingPsychadelia
             else if (Math.Abs(dy) > Math.Abs(dx))
             {
                 // Correct Horizontal
-                if (Object1.Velocity.X < 0) // Moving Left
+                if (Object1.Bounds.Center.X >= Overlap.Center.X) // Moving Left
                 {
                     // Adjust Right
                     OffsetPlayerBounds(Object1, dx, 0);
 
                 }
-                if (Object1.Velocity.X >= 0)
+                if (Object1.Bounds.Center.X < Overlap.Center.X)
                 {
                     // Adjust Left
 
