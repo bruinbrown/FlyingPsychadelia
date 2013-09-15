@@ -54,35 +54,8 @@ namespace FlyingPsychadelia.Screens
             _gameFont = _content.Load<SpriteFont>("gamefont");
 
             _map = _content.Load<Map>("map2");
-            List<Player> Players = new List<Player>();
-            Players.Add(new Player(_content, new Player1KeyboardController()));
-            Players.Add(new Player(_content, new Player2KeyboardController()));
-            for (int i = 0; i < Players.Count; i++)
-            {
-                Players[i].SetLocation((i+1) * 400, 350);
-            }
-            Camera.Instance.SetMap(_map, Players[0].LocationAsVector(), ScreenManager.GraphicsDevice.Viewport);
-            List<BaseEnemy> _enemies = new List<BaseEnemy>();
-            var Random = new System.Random();
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    var x = Random.Next(_map.Width* _map.TileWidth);
-            //    var y = Random.Next(_map.Height * _map.TileHeight);
-            //    _enemies.Add(new StaticEnemy(_content,x,y));
-            //}
-            for (int i = 0; i < 50; i++)
-            {
-                var x = Random.Next(_map.Width * _map.TileWidth);
-                var y = Random.Next(_map.Height * _map.TileHeight);
-                _enemies.Add(new HorizontallyOscillatingEnemy(_content, x, y, 150));
-            }
-            for (int i = 0; i < 50; i++)
-            {
-                var x = Random.Next(_map.Width * _map.TileWidth);
-                var y = Random.Next(_map.Height * _map.TileHeight);
-                _enemies.Add(new VerticallyOscillatingEnemy(_content, x, y, 150));
-            }
-            _world = new World(_map, Players, _enemies);
+            _world = new World(_map, _content);
+            Camera.Instance.SetMap(_map, _world.Players[0].LocationAsVector(), ScreenManager.GraphicsDevice.Viewport);
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
             // timing mechanism that we have just finished a very long frame, and that
