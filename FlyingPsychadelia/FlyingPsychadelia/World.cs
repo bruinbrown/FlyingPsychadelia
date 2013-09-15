@@ -34,6 +34,19 @@ namespace FlyingPsychadelia
             _map = map;
 
             _players.Add(new Player(_content, new Player1KeyboardController()));
+            ObjectLayer StartLayer = null;
+            try
+            {
+                StartLayer = _map.ObjectLayers["Start"];
+            }
+            catch (Exception ex)
+            {
+                
+            }
+            if (StartLayer != null)
+            {
+                Players[0].SetLocation(StartLayer.MapObjects[0].Bounds.X, StartLayer.MapObjects[0].Bounds.Y);
+            }
             var Random = new System.Random();
             for (int i = 0; i < 50; i++)
             {
@@ -115,7 +128,7 @@ namespace FlyingPsychadelia
             var dy = Overlap.Height;
             Player player = Object1 as Player;
 
-            if (Math.Abs(dx) > Math.Abs(dy) + 0.01f )
+            if (Math.Abs(dx) > Math.Abs(dy) + 0.01f)
             {
                 // Correct Vertical
                 if (Object1.Velocity.Y < 0)
@@ -133,7 +146,7 @@ namespace FlyingPsychadelia
                 }
                 Object1.Velocity = new Vector2(Object1.Velocity.X, 0.0f);
             }
-            else if (Math.Abs(dy) > Math.Abs(dx) + 0.01f )
+            else if (Math.Abs(dy) > Math.Abs(dx) + 0.01f)
             {
                 // Correct Horizontal
                 if (Object1.Velocity.X < 0) // Moving Left
