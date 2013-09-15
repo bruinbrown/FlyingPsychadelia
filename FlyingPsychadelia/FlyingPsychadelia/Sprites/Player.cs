@@ -60,16 +60,17 @@ namespace FlyingPsychadelia.Sprites
                 AddVeocity(new Vector2(moveMagnitudeX, 0));
                 _Direction = Direction.Right;
             }
-            else if (_controller.DetectLeft())
+            if (_controller.DetectLeft())
             {
                 AddVeocity(new Vector2(-moveMagnitudeX, 0));
                 _Direction = Direction.Left;
             }
-            else if (_controller.DetectDown())
+            if (_controller.DetectDown())
             {
                 AddVeocity(new Vector2(0, moveMagnitude));
             }
-            else if (_controller.DetectFire())
+           
+            if (_controller.DetectFire())
             {
                 // Spawn new Charm
                 var speed = 0.7f * gameTime.ElapsedGameTime.Milliseconds;
