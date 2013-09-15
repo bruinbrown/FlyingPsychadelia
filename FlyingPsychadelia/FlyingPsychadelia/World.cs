@@ -42,7 +42,7 @@ namespace FlyingPsychadelia
             {
                 Players[0].SetLocation(StartLayer.MapObjects[0].Bounds.X, StartLayer.MapObjects[0].Bounds.Y);
             }
-            var EnemyObjects = GetLayerObjectsOrNull("Enemies");
+            var EnemyObjects = GetLayerObjectsOrNull("EnemyLayer");
             if (EnemyObjects == null)
             {
                 var Random = new System.Random();
@@ -179,18 +179,19 @@ namespace FlyingPsychadelia
         {
             foreach (Player player in _players)
             {
-                var Charms = player.Charms;
+                var charms = player.Charms;
 
-                Charm[] CharmArray = Charms.ToArray();
-                foreach (Charm charm in CharmArray)
+                Charm[] charmArray = charms.ToArray();
+                foreach (Charm charm in charmArray)
                 {
-                    BaseEnemy[] EnemyArray = _enemies.ToArray();
-                    foreach (var Enemy in EnemyArray)
+                    BaseEnemy[] enemyArray = _enemies.ToArray();
+                    foreach (var enemy in enemyArray)
                     {
-                        if (charm.Bounds.Intersects(Enemy.Bounds))
+                        if (charm.Bounds.Intersects(enemy.Bounds))
                         {
                             // do enemy interaction
-                            _enemies.Remove(Enemy);
+                            _enemies.Remove(enemy);
+                            player.Score += 100;
                         }
                     }
                     foreach (var obj in _blockingObjects)
@@ -204,8 +205,8 @@ namespace FlyingPsychadelia
                         player.Charms.Remove(charm);
                 }
             }
-
         }
+
         private void CheckForPlayerDeath(GameTime gameTime)
         {
             var deathObjects = LayerObjectsOrNull("DeathLayer", Camera.Instance.CameraView);

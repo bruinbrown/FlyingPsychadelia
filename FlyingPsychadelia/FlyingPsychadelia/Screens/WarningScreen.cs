@@ -13,12 +13,12 @@ namespace FlyingPsychadelia.Screens
         private bool _skipScreen;
 
         private const string WarningLine1 = "A very small percentage of people may experience a seizure when";
-        private const string WarningLine2 = "exposed to certain visual images, including flashing lights or patters";
+        private const string WarningLine2 = "exposed to certain visual images, including flashing lights or patterns";
         private const string WarningLine3 = "that may appear in video games. If you or any of your relatives have";
         private const string WarningLine4 = "a history of seizures or epilepsy, consult a doctor before playing.";
 
         private const string WarningLine5 = "Immediately stop playing and consult a doctor if you experience any";
-        private const string WarningLine6 = "symptoms such as lightheadedness, disorientation and twitching.";
+        private const string WarningLine6 = "symptoms such as lightheadedness, disorientation or twitching.";
 
         public override void HandleInput(InputState input)
         {
