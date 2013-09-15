@@ -24,6 +24,7 @@ namespace FlyingPsychadelia
 
         public void Draw(SpriteBatch spriteBatch, int progress, Map map)
         {
+            progress = progress >= map.Width*map.TileWidth - 25 ? map.Width*map.TileWidth : progress; // hack to manage barrier at the end of the level
             var destinationRectangle = new Rectangle(0,0,progress-Camera.Instance.CameraView.X, Camera.Instance.CameraView.Height);
             var sourceRectangle = new Rectangle(Camera.Instance.CameraView.X, 0, progress - Camera.Instance.CameraView.X,
                                                 Camera.Instance.CameraView.Height);

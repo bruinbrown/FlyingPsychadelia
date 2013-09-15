@@ -151,15 +151,15 @@ namespace FlyingPsychadelia
                                                                Camera.Instance.CameraView).Select(p => new MapObjectWrapper(p)).ToArray();
             CheckForPlayerDeath(gameTime);
             ResolveStaticCollisions();
-            ResolveEnemyCollisions();
+            ResolveEnemyCollisions(gameTime);
             BulletCollisions();
             CalculateMaxProgression();
             CheckForWorldReset();
         }
 
-        private void ResolveEnemyCollisions()
+        private void ResolveEnemyCollisions(GameTime gameTime)
         {
-            var enemys = _enemies.Where(p => p.Bounds.Intersects(Camera.Instance.CameraView));
+            var enemys = _enemies.Where(p => p.Bounds.Intersects(Camera.Instance.CameraView)).ToArray();
 
             foreach (var enemy in enemys)
             {
@@ -167,7 +167,8 @@ namespace FlyingPsychadelia
                 {
                     if (enemy.Bounds.Intersects(player.Bounds))
                     {
-                        // do enemy interaction
+                        player.PlayHasBeenHurt(gameTime);
+                        _enemies.Remove(enemy);
                     }
                 }
 
