@@ -45,7 +45,7 @@ namespace FlyingPsychadelia.Screens
         /// </summary>
         private void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GameplayScreen());
+            LoadingScreen.Load(ScreenManager, "Loading...", e.PlayerIndex, new GameplayScreen());
         }
 
 

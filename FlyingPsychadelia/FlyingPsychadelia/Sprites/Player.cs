@@ -23,6 +23,8 @@ namespace FlyingPsychadelia.Sprites
         public bool IsLanded;
         private readonly Random _random;
         private int _health;
+        private double _timePlayerSetToInvincible;
+
         public int Health
         {
             get { return _health; }
@@ -104,6 +106,18 @@ namespace FlyingPsychadelia.Sprites
             Health = MaxHealth;
             Score = 0;
         }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (PlayerState == PlayerStates.Invincible && _timePlayerSetToInvincible < gameTime.TotalGameTime.Seconds)
+            {
+                PlayerState = PlayerStates.Alive;
+            }
+        }
+
+
         public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
         {
             if (Velocity.X > 0)
@@ -119,7 +133,33 @@ namespace FlyingPsychadelia.Sprites
         public bool MovingRight()
         {
             return Velocity.X > 0;
+        }
 
+        public void ResetPlayer()
+        {
+            SetLocation(10, 10);
+            PlayerState = PlayerStates.Alive;
+            Health = MaxHealth;
+        }
+
+        public void PlayHasBeenKilled(GameTime gameTime)
+        {
+            Health = 0;
+            PlayerState = PlayerStates.Dead;
+        }
+
+        public void PlayHasBeenHurt(GameTime gameTime)
+        {
+            if (PlayerState == PlayerStates.Alive)
+            {
+                Health--;
+                if (Health > 0)
+                {
+                    Health--;
+                    PlayerState = PlayerStates.Invincible;
+                    _timePlayerSetToInvincible = gameTime.TotalGameTime.TotalSeconds + 5;
+                }
+            }
         }
     }
 }

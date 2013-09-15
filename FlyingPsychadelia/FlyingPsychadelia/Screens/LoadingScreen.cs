@@ -36,6 +36,7 @@ namespace FlyingPsychadelia.Screens
     {
         private readonly bool _loadingIsSlow;
         private bool _otherScreensAreGone;
+        private string _loadingText;
 
         private readonly GameScreen[] _screensToLoad;
 
@@ -45,10 +46,11 @@ namespace FlyingPsychadelia.Screens
         /// The constructor is private: loading screens should
         /// be activated via the static Load method instead.
         /// </summary>
-        private LoadingScreen(ScreenManager screenManager, bool loadingIsSlow,
+        private LoadingScreen(ScreenManager screenManager, string LoadingText,
                               GameScreen[] screensToLoad)
         {
-            _loadingIsSlow = loadingIsSlow;
+            _loadingIsSlow = LoadingText == null || LoadingText.Length <= 1;
+            _loadingText = LoadingText;
             _screensToLoad = screensToLoad;
 
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
@@ -58,7 +60,7 @@ namespace FlyingPsychadelia.Screens
         /// <summary>
         /// Activates the loading screen.
         /// </summary>
-        public static void Load(ScreenManager screenManager, bool loadingIsSlow,
+        public static void Load(ScreenManager screenManager, string LoadingText,
                                 PlayerIndex? controllingPlayer,
                                 params GameScreen[] screensToLoad)
         {
@@ -70,7 +72,7 @@ namespace FlyingPsychadelia.Screens
 
             // Create and activate the loading screen.
             LoadingScreen loadingScreen = new LoadingScreen(screenManager,
-                                                            loadingIsSlow,
+                                                            LoadingText,
                                                             screensToLoad);
 
             screenManager.AddScreen(loadingScreen, controllingPlayer);
@@ -133,12 +135,14 @@ namespace FlyingPsychadelia.Screens
             // second while returning from the game to the menus. This parameter
             // tells us how long the loading is going to take, so we know whether
             // to bother drawing the message.
-            if (_loadingIsSlow)
+            if (_loadingText != null)
             {
                 SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
                 SpriteFont font = ScreenManager.Font;
 
-                const string message = "Loading...";
+                string message = _loadingText;
+
+                ScreenManager.GraphicsDevice.Clear(Color.Black);
 
                 // Center the text in the viewport.
                 Viewport viewport = ScreenManager.GraphicsDevice.Viewport;

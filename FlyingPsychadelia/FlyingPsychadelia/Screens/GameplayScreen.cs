@@ -99,6 +99,11 @@ namespace FlyingPsychadelia.Screens
         {
             base.Update(gameTime, otherScreenHasFocus, false);
 
+            if (_world.Players[0].Bounds.Left > 3150)
+            {
+                LoadingScreen.Load(ScreenManager, "Yay! Nice Trip!", 0, new MainMenuScreen());
+            }
+
             // Gradually fade in or out depending on whether we are covered by the pause screen.
             if (coveredByOtherScreen)
                 _pauseAlpha = Math.Min(_pauseAlpha + 1f / 32, 1);
