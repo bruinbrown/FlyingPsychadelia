@@ -29,7 +29,7 @@ namespace FlyingPsychadelia
             if (Velocity.X < 0)
                 base.Draw(spriteBatch);
             else
-                spriteBatch.Draw(_Texture, GetBoundsAdjustedForCamera(Bounds), null, Color.White, 0.0f, new Vector2(), SpriteEffects.FlipHorizontally, 0);
+                DrawReversed(spriteBatch);
         }
 
     }

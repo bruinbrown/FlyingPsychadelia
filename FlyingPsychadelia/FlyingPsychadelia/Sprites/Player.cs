@@ -95,7 +95,13 @@ namespace FlyingPsychadelia.Sprites
             Health = MaxHealth;
             Score = 0;
         }
-
+        public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
+        {
+            if (Velocity.X < 0)
+                DrawReversed(spriteBatch);
+            else
+                base.Draw(spriteBatch);
+        }
         public void AddVeocity(Vector2 vector2)
         {
             Velocity = new Vector2(Velocity.X + vector2.X, Velocity.Y + vector2.Y);
