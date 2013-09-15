@@ -17,6 +17,7 @@ namespace FlyingPsychadelia
         private readonly Map _map;
         private readonly List<BaseEnemy> _enemies;
         private readonly ContentManager _content;
+        private readonly PotOfGold _potOfGold;
         public int Progression { get; set; }
         public int Time { get; set; }
         private const int MaxTime = 500;
@@ -37,32 +38,37 @@ namespace FlyingPsychadelia
             _players.Add(new Player(_content, new Player1KeyboardController()));
             Time = 500;
 
-            ObjectLayer StartLayer = GetLayerOrNull("StartLayer");
-            if (StartLayer != null)
+            ObjectLayer startLayer = GetLayerOrNull("StartLayer");
+            if (startLayer != null)
             {
-                Players[0].SetLocation(StartLayer.MapObjects[0].Bounds.X, StartLayer.MapObjects[0].Bounds.Y);
+                var startBounds = startLayer.MapObjects.Single(m => m.Name == "Start").Bounds;
+                Players[0].SetLocation(startBounds.X, startBounds.Y);
+
+                
+                var endBounds = startLayer.MapObjects.Single(m => m.Name == "End").Bounds;
+                _potOfGold = new PotOfGold(content, endBounds);
             }
-            var EnemyObjects = GetLayerObjectsOrNull("EnemyLayer");
-            if (EnemyObjects == null)
+            var enemyObjects = GetLayerObjectsOrNull("EnemyLayer");
+            if (enemyObjects == null)
             {
-                var Random = new System.Random();
+                var random = new System.Random();
                 for (int i = 0; i < 50; i++)
                 {
-                    var x = Random.Next(_map.Width * _map.TileWidth);
-                    var y = Random.Next(_map.Height * _map.TileHeight);
+                    var x = random.Next(_map.Width * _map.TileWidth);
+                    var y = random.Next(_map.Height * _map.TileHeight);
                     _enemies.Add(new HorizontallyOscillatingEnemy(_content, x, y, 150));
                 }
                 for (int i = 0; i < 50; i++)
                 {
-                    var x = Random.Next(_map.Width * _map.TileWidth);
-                    var y = Random.Next(_map.Height * _map.TileHeight);
+                    var x = random.Next(_map.Width * _map.TileWidth);
+                    var y = random.Next(_map.Height * _map.TileHeight);
                     _enemies.Add(new VerticallyOscillatingEnemy(_content, x, y, 150));
                 }
 
             }
             else
             {
-                foreach (MapObject mapObject in EnemyObjects)
+                foreach (MapObject mapObject in enemyObjects)
                 {
                     var x = mapObject.Bounds.X;
                     var y = mapObject.Bounds.Y;
@@ -233,6 +239,7 @@ namespace FlyingPsychadelia
             {
                 enemy.Draw(spriteBatch);
             }
+            _potOfGold.Draw(spriteBatch);
         }
 
         private void CalculateMaxProgression()

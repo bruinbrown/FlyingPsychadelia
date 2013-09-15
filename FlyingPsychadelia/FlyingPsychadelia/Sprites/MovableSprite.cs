@@ -46,6 +46,7 @@ namespace FlyingPsychadelia
         public MovableSprite(ContentManager content)
         {
             _Content = content;
+            _modelVisibility = true;
         }
         protected void SetTexture(string TextureName, int FrameWidth, int FrameHeight)
         {
