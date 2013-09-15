@@ -126,7 +126,7 @@ namespace FlyingPsychadelia.Screens
 
             if (IsActive)
             {
-                _world.Update();
+                _world.Update(gameTime);
             }
         }
 
@@ -174,7 +174,7 @@ namespace FlyingPsychadelia.Screens
         {
             // This game has a blue background. Why? Because!
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target,
-                                               Color.CornflowerBlue, 0, 0);
+                                               Color.CornflowerBlue, 0, 0);//`
 
             var spriteBatch = ScreenManager.SpriteBatch;
 

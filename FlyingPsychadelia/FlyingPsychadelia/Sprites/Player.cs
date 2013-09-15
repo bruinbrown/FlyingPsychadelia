@@ -21,21 +21,21 @@ namespace FlyingPsychadelia
         {
             _Jump[ _random.Next()%3 ].Play();
         }
-        public void DetectMovement()
+
+        public void DetectMovement(GameTime gameTime)
         {
-            int MoveMagnitude = 5;
+            float MoveMagnitude = 0.02f * gameTime.ElapsedGameTime.Milliseconds;
+            float MoveMagnitudeX = MoveMagnitude;
+            if (!_IsLanded) MoveMagnitudeX *= 0.7f; // dampen in air
+
             if (_controller.DetectRight())
             {
-                AddVeocity(new Vector2(MoveMagnitude, 0));
+                AddVeocity(new Vector2(MoveMagnitudeX, 0));
             }
             else if (_controller.DetectLeft())
             {
-                AddVeocity(new Vector2(-MoveMagnitude, 0));
+                AddVeocity(new Vector2(-MoveMagnitudeX, 0));
             }
-            //if (_controller.DetectUp())
-            //{
-            //    AddVeocity(new Vector2(0, -MoveMagnitude * 2));
-            //}
             else if (_controller.DetectDown())
             {
                 AddVeocity(new Vector2(0, MoveMagnitude));
@@ -50,11 +50,14 @@ namespace FlyingPsychadelia
 
                 if (_IsLanded)
                 {
-                    AddVeocity(new Vector2(0, -15));
+                    AddVeocity(new Vector2(0, -MoveMagnitude * 25f));
                     _IsLanded = false;
                     JumpSound();
                 }
             }
+            //
+            if (Math.Abs(Velocity.X) < MoveMagnitude * 0.2f)
+                AddVeocity( new Vector2(-Velocity.X, 0) );
         }
         public Player(ContentManager content, IController Controller)
             : base(content)
@@ -73,18 +76,13 @@ namespace FlyingPsychadelia
         {
             spriteBatch.Draw(_Texture,Bounds, Color.White);
         }
-        public void Update(float gametime)
+        public void Update(GameTime gametime)
         {
             // Apply current velocity to rectangle X and Y
             _bounds.Offset((int)Math.Floor(Velocity.X), (int)Math.Floor(Velocity.Y));
         }
         public void AddVeocity(Vector2 vector2)
         {
-            if (!_IsLanded)
-            {
-                // don't allow as much control when you're in the air
-                vector2.X *= 0.2f;
-            }
             Velocity = new Vector2(Velocity.X + vector2.X, Velocity.Y + vector2.Y);
         }
         public bool MovingUp()
