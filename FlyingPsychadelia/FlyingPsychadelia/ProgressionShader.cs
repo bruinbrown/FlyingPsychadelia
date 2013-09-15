@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FuncWorks.XNA.XTiled;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
@@ -7,27 +8,31 @@ namespace FlyingPsychadelia
     public class ProgressionShader
     {
         private readonly GraphicsDevice _graphics;
+        private readonly Map _map;
         private readonly Color _baseColour;
         private readonly Texture2D _gradient;
         static private Random _random;
 
-        public ProgressionShader(GraphicsDevice graphics, Color baseColour)
+        public ProgressionShader(GraphicsDevice graphics, Map map, Color baseColour)
         {
             _graphics = graphics;
+            _map = map;
             _baseColour = baseColour;
             _random = new Random();
             _gradient = CreateBg();
         }
 
-        public void Draw(SpriteBatch spriteBatch, int progress)
+        public void Draw(SpriteBatch spriteBatch, int progress, Map map)
         {
-            var progressRectangle = new Rectangle(0, 0, (_graphics.Viewport.Width * progress/100), _graphics.Viewport.Height);
-            spriteBatch.Draw(_gradient, progressRectangle, _baseColour);
+            var destinationRectangle = new Rectangle(0,0,progress-Camera.Instance.CameraView.X, Camera.Instance.CameraView.Height);
+            var sourceRectangle = new Rectangle(Camera.Instance.CameraView.X, 0, progress - Camera.Instance.CameraView.X,
+                                                Camera.Instance.CameraView.Height);
+            spriteBatch.Draw(_gradient, destinationRectangle, sourceRectangle, _baseColour);
         }
 
         private Texture2D CreateBg()
         {
-            var width = _graphics.Viewport.Width;
+            var width = _map.Width*_map.TileWidth;
             var height = _graphics.Viewport.Height;
 
             var backgroundTex = new Texture2D(_graphics, width, height);
