@@ -3,20 +3,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FlyingPsychadelia.Sprites
 {
     public class Player : MovableSprite
     {
         public List<Charm> Charms = new List<Charm>();
-        public enum PlayerStates
-        {
-            Alive,
-            Dead,
-            Invincible
-        }
-
-        public PlayerStates PlayerState;
         private readonly IController _controller;
         private Direction _Direction = Direction.Right;
         private readonly SoundEffect[] _jump;
@@ -134,13 +127,19 @@ namespace FlyingPsychadelia.Sprites
             if (_timeUntilCanShoot < 0) _timeUntilCanShoot = 0;
         }
 
-        public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            if (Velocity.X > 0)
-                _Reversed = false;
-            if (Velocity.X < 0)
-                _Reversed = true;
             base.Draw(spriteBatch);
+
+            if (Velocity.X > 0)
+            {
+                _Reversed = false;
+            }
+            if (Velocity.X < 0)
+            {
+                _Reversed = true;
+            }
+
             Charms.ForEach(c => c.Draw(spriteBatch));
         }
         public bool MovingUp()
@@ -175,9 +174,8 @@ namespace FlyingPsychadelia.Sprites
                 Health--;
                 if (Health > 0)
                 {
-                    Health--;
                     PlayerState = PlayerStates.Invincible;
-                    _timePlayerSetToInvincible = gameTime.TotalGameTime.TotalSeconds + 5;
+                    _timePlayerSetToInvincible = gameTime.TotalGameTime.TotalSeconds + 1;
                 }
             }
         }

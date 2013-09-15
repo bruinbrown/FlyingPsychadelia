@@ -18,6 +18,15 @@ namespace FlyingPsychadelia
 
         protected bool _Reversed;
 
+        public enum PlayerStates
+        {
+            Alive,
+            Dead,
+            Invincible
+        }
+
+        public PlayerStates PlayerState;
+
         public Rectangle Bounds
         {
             get
@@ -31,6 +40,8 @@ namespace FlyingPsychadelia
         }
         public Vector2 Velocity { get; set; }
         protected static System.Random Random = new System.Random();
+        private double _nextBlinkTime;
+        private bool _modelVisibility;
 
         public MovableSprite(ContentManager content)
         {
@@ -48,8 +59,11 @@ namespace FlyingPsychadelia
         }
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            _Animation.Draw(spriteBatch, GetBoundsAdjustedForCamera(Bounds), _Reversed);
-            //spriteBatch.Draw(_Texture, GetBoundsAdjustedForCamera(Bounds), Color.White);
+            if (_modelVisibility)
+            {
+                _Animation.Draw(spriteBatch, GetBoundsAdjustedForCamera(Bounds), _Reversed);
+                //spriteBatch.Draw(_Texture, GetBoundsAdjustedForCamera(Bounds), Color.White);
+            }
         }
         protected Rectangle GetBoundsAdjustedForCamera(Rectangle bounds)
         {
@@ -58,11 +72,25 @@ namespace FlyingPsychadelia
             Temp.Offset(-ViewRect.X, -ViewRect.Y);
             return Temp;
         }
-        public virtual void Update(GameTime gametime)
+        public virtual void Update(GameTime gameTime)
         {
             // Apply current velocity to rectangle X and Y
-            _Animation.Update(gametime);
+            _Animation.Update(gameTime);
             _bounds.Offset((int)Math.Floor(Velocity.X), (int)Math.Floor(Velocity.Y));
+
+            if (PlayerState == PlayerStates.Invincible)
+            {
+                if (gameTime.TotalGameTime.TotalMilliseconds >= _nextBlinkTime)
+                {
+                    _modelVisibility = !_modelVisibility;
+
+                    _nextBlinkTime = gameTime.TotalGameTime.TotalMilliseconds + 50;
+                }
+            }
+            if (PlayerState != PlayerStates.Invincible)
+            {
+                _modelVisibility = true;
+            }
         }
         public Vector2 LocationAsVector()
         {
