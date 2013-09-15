@@ -34,6 +34,7 @@ namespace FlyingPsychadelia
         protected void SetTexture(string TextureName)
         {
             _Texture = _Content.Load<Texture2D>(TextureName);
+            SetLocation(10,10);
         }
         public void SetLocation(int X, int Y)
         {
@@ -50,7 +51,7 @@ namespace FlyingPsychadelia
             Temp.Offset(-ViewRect.X, -ViewRect.Y);
             return Temp;
         }
-        public virtual void Update(float gametime)
+        public virtual void Update(GameTime gametime)
         {
             // Apply current velocity to rectangle X and Y
             _bounds.Offset((int)Math.Floor(Velocity.X), (int)Math.Floor(Velocity.Y));

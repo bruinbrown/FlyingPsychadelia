@@ -16,7 +16,7 @@ namespace FlyingPsychadelia
             if (Random.Next(2) == 0)
                 Velocity *= -1;
         }
-        public override void Update(float gametime)
+        public override void Update(GameTime gametime)
         {
             if (Bounds.Y < _StartY - (_OscillationMax / 2) || Bounds.Y > _StartY + (_OscillationMax / 2))
                 Velocity *= -1;
