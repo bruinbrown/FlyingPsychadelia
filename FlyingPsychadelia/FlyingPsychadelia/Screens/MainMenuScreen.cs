@@ -17,7 +17,7 @@ namespace FlyingPsychadelia.Screens
         /// </summary>
         public MainMenuScreen()
         {
-            MainMenuEntries.Add(new MainMenuEntry("Flying Psychadelia", true));
+            MainMenuEntries.Add(new MainMenuEntry("Flying Psychedelia", true));
 
             // Create our menu entries.
             var playGameMenuEntry = new MenuEntry("Play Game", true);

@@ -59,7 +59,7 @@ namespace FlyingPsychadelia.Screens
 
             _gameFont = _content.Load<SpriteFont>("gamefont");
 
-            _map = _content.Load<Map>("map2");
+            _map = _content.Load<Map>("map3");
 
             _world = new World(_map, _content);
             _gameOverlay.SetWorld(_world);
