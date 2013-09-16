@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using FlyingPsychadelia.Screens.GameStateManagement;
 
 namespace FlyingPsychadelia.Screens
 {
@@ -115,7 +116,7 @@ namespace FlyingPsychadelia.Screens
 
             if (_world.WorldState == World.WorldStates.End)
             {
-                LoadingScreen.Load(ScreenManager, "Yay! Nice Trip!", 0, new MainMenuScreen());
+                LoadingScreen.Load(ScreenManager, "Yay! Nice Trip!", 0, new BackgroundScreen(), new MainMenuScreen());
             }
 
             // Gradually fade in or out depending on whether we are covered by the pause screen.
